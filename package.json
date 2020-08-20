@@ -26,9 +26,7 @@
     "format": "prettier --trailing-comma es5 --write 'src/**/*.js'",
     "gen": "swagen sdk ../kanban/openapi.yml",
     "lint": "sketch lint src",
-    "release": "standard-version",
-    "start": "bin/mock-server.js",
-    "test:int": "sketch test --env=node"
+    "release": "standard-version"
   },
   "commitlint": {
     "extends": [
