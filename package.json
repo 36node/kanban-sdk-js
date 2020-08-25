@@ -1,5 +1,5 @@
 {
-  "name": "kanban-sdk-js",
+  "name": "@36node/kanban-sdk",
   "version": "0.0.3",
   "description": "A SDK boilerplate.",
   "repository": {
