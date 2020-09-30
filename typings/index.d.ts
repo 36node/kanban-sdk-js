@@ -8,6 +8,7 @@ declare class SDK {
   project: ProjectAPI;
   ticket: TicketAPI;
   lane: LaneAPI;
+  statistics: StatisticsAPI;
 }
 
 declare global {
@@ -134,6 +135,12 @@ declare global {
      */
     deleteLane(req: DeleteLaneRequest): Promise<DeleteLaneResponse>;
   }
+  export interface StatisticsAPI {
+    /**
+     * Statistics tickets
+     */
+    getTicketsStatistics(req: GetTicketsStatisticsRequest): Promise<GetTicketsStatisticsResponse>;
+  }
 
   export interface ListProjectsRequest {
     query?: {
@@ -152,7 +159,7 @@ declare global {
       /**
        * 项目实际开始激活的时间
        */
-      activatedAt?: string;
+      activeAt?: string;
       /**
        * 项目实际关闭时间
        */
@@ -204,7 +211,7 @@ declare global {
         /**
          * 实际里程碑开始激活的时间
          */
-        activatedAt?: Date;
+        activeAt?: Date;
         /**
          * 实际里程碑关闭时间
          */
@@ -349,7 +356,7 @@ declare global {
       /**
        * 项目实际开始激活的时间
        */
-      activatedAt?: string;
+      activeAt?: string;
       /**
        * 项目实际关闭时间
        */
@@ -441,7 +448,7 @@ declare global {
       /**
        * 项目实际开始激活的时间
        */
-      activatedAt?: string;
+      activeAt?: string;
       /**
        * 项目实际关闭时间
        */
@@ -493,7 +500,7 @@ declare global {
         /**
          * 实际里程碑开始激活的时间
          */
-        activatedAt?: Date;
+        activeAt?: Date;
         /**
          * 实际里程碑关闭时间
          */
@@ -641,7 +648,7 @@ declare global {
       /**
        * 项目实际开始激活的时间
        */
-      activatedAt?: string;
+      activeAt?: string;
       /**
        * 项目实际关闭时间
        */
@@ -693,7 +700,7 @@ declare global {
         /**
          * 实际里程碑开始激活的时间
          */
-        activatedAt?: Date;
+        activeAt?: Date;
         /**
          * 实际里程碑关闭时间
          */
@@ -839,7 +846,7 @@ declare global {
       /**
        * 项目实际开始激活的时间
        */
-      activatedAt?: string;
+      activeAt?: string;
       /**
        * 项目实际关闭时间
        */
@@ -920,7 +927,7 @@ declare global {
       /**
        * 项目实际开始激活的时间
        */
-      activatedAt?: string;
+      activeAt?: string;
       /**
        * 项目实际关闭时间
        */
@@ -972,7 +979,7 @@ declare global {
         /**
          * 实际里程碑开始激活的时间
          */
-        activatedAt?: Date;
+        activeAt?: Date;
         /**
          * 实际里程碑关闭时间
          */
@@ -1414,7 +1421,7 @@ declare global {
       /**
        * 实际里程碑开始激活的时间
        */
-      activatedAt?: Date;
+      activeAt?: Date;
       /**
        * 实际里程碑关闭时间
        */
@@ -1482,7 +1489,7 @@ declare global {
       /**
        * 实际里程碑开始激活的时间
        */
-      activatedAt?: Date;
+      activeAt?: Date;
       /**
        * 实际里程碑关闭时间
        */
@@ -1548,7 +1555,7 @@ declare global {
       /**
        * 实际里程碑开始激活的时间
        */
-      activatedAt?: Date;
+      activeAt?: Date;
       /**
        * 实际里程碑关闭时间
        */
@@ -1619,7 +1626,7 @@ declare global {
       /**
        * 实际里程碑开始激活的时间
        */
-      activatedAt?: Date;
+      activeAt?: Date;
       /**
        * 实际里程碑关闭时间
        */
@@ -1688,7 +1695,7 @@ declare global {
       /**
        * 实际里程碑开始激活的时间
        */
-      activatedAt?: Date;
+      activeAt?: Date;
       /**
        * 实际里程碑关闭时间
        */
@@ -1749,7 +1756,7 @@ declare global {
       /**
        * 实际里程碑开始激活的时间
        */
-      activatedAt?: Date;
+      activeAt?: Date;
       /**
        * 实际里程碑关闭时间
        */
@@ -1896,7 +1903,7 @@ declare global {
       /**
        * 发布人 (userId)
        */
-      publishBy?: string;
+      publishBy?: string | null;
       /**
        * 发布时间
        */
@@ -1922,7 +1929,7 @@ declare global {
       /**
        * 领取人 (userId)
        */
-      takeBy?: string;
+      takeBy?: string | null;
       /**
        * 创建时间
        */
@@ -2029,7 +2036,7 @@ declare global {
       /**
        * 发布人 (userId)
        */
-      publishBy?: string;
+      publishBy?: string | null;
       /**
        * 发布时间
        */
@@ -2055,7 +2062,7 @@ declare global {
       /**
        * 领取人 (userId)
        */
-      takeBy?: string;
+      takeBy?: string | null;
       /**
        * 创建时间
        */
@@ -2154,7 +2161,7 @@ declare global {
       /**
        * 发布人 (userId)
        */
-      publishBy?: string;
+      publishBy?: string | null;
       /**
        * 发布时间
        */
@@ -2180,7 +2187,7 @@ declare global {
       /**
        * 领取人 (userId)
        */
-      takeBy?: string;
+      takeBy?: string | null;
       /**
        * 创建时间
        */
@@ -2280,7 +2287,7 @@ declare global {
       /**
        * 发布人 (userId)
        */
-      publishBy?: string;
+      publishBy?: string | null;
       /**
        * 发布时间
        */
@@ -2306,7 +2313,7 @@ declare global {
       /**
        * 领取人 (userId)
        */
-      takeBy?: string;
+      takeBy?: string | null;
       /**
        * 创建时间
        */
@@ -2409,7 +2416,7 @@ declare global {
       /**
        * 发布人 (userId)
        */
-      publishBy?: string;
+      publishBy?: string | null;
       /**
        * 发布时间
        */
@@ -2435,7 +2442,7 @@ declare global {
       /**
        * 领取人 (userId)
        */
-      takeBy?: string;
+      takeBy?: string | null;
       /**
        * 创建时间
        */
@@ -2530,7 +2537,7 @@ declare global {
       /**
        * 发布人 (userId)
        */
-      publishBy?: string;
+      publishBy?: string | null;
       /**
        * 发布时间
        */
@@ -2556,7 +2563,7 @@ declare global {
       /**
        * 领取人 (userId)
        */
-      takeBy?: string;
+      takeBy?: string | null;
       /**
        * 创建时间
        */
@@ -2674,7 +2681,7 @@ declare global {
       /**
        * 发布人 (userId)
        */
-      publishBy?: string;
+      publishBy?: string | null;
       /**
        * 发布时间
        */
@@ -2700,7 +2707,7 @@ declare global {
       /**
        * 领取人 (userId)
        */
-      takeBy?: string;
+      takeBy?: string | null;
       /**
        * 创建时间
        */
@@ -2814,7 +2821,7 @@ declare global {
       /**
        * 发布人 (userId)
        */
-      publishBy?: string;
+      publishBy?: string | null;
       /**
        * 发布时间
        */
@@ -2840,7 +2847,7 @@ declare global {
       /**
        * 领取人 (userId)
        */
-      takeBy?: string;
+      takeBy?: string | null;
       /**
        * 创建时间
        */
@@ -2954,7 +2961,7 @@ declare global {
       /**
        * 发布人 (userId)
        */
-      publishBy?: string;
+      publishBy?: string | null;
       /**
        * 发布时间
        */
@@ -2980,7 +2987,7 @@ declare global {
       /**
        * 领取人 (userId)
        */
-      takeBy?: string;
+      takeBy?: string | null;
       /**
        * 创建时间
        */
@@ -3368,6 +3375,64 @@ declare global {
   }
   export interface DeleteLaneRequest {
     laneId: string;
+  }
+  export interface GetTicketsStatisticsRequest {
+    query?: {
+      _group:
+        | ("lane" | "milestone" | "level" | "priority" | "state" | "project" | "takeBy")
+        | ("lane" | "milestone" | "level" | "priority" | "state" | "project" | "takeBy")[];
+      milestone?: string;
+      project?: string;
+      lane?: string;
+      repositories?: string;
+      priority?: 0 | 1 | 2;
+      reopen?: boolean;
+      deadline_gt?: Date;
+      deadline_lt?: Date;
+      title_like?: string;
+      takeBy?: string;
+      createBy?: string;
+      publishBy?: string;
+      level?: number;
+      labels?: string;
+      state?: "OPEN" | "CLOSED";
+    };
+  }
+  export interface GetTicketsStatisticsResponse {
+    content?: {
+      /**
+       * 所属项目 (projectId)
+       */
+      project?: string;
+      /**
+       * 所属里程碑 (milestoneId)
+       */
+      milestone?: string;
+      /**
+       * 所属泳道 (laneId)
+       */
+      lane?: string;
+      /**
+       * 级别
+       */
+      level?: number;
+      /**
+       * 优先级
+       */
+      priority?: 0 | 1 | 2;
+      /**
+       * 领取人 (userId)
+       */
+      takeBy?: string | null;
+      /**
+       * 状态
+       */
+      state?: "OPEN" | "CLOSED";
+      /**
+       * 统计数量
+       */
+      count?: number;
+    }[];
   }
 }
 

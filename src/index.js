@@ -567,4 +567,26 @@ export default class SDK {
       });
     },
   };
+  /**
+   * statistics's methods
+   */
+  statistics = {
+    /**
+     * Statistics tickets
+     *
+     * @param {GetTicketsStatisticsRequest} req getTicketsStatistics request
+     * @returns {Promise<GetTicketsStatisticsResponse>} Expected response to a valid request
+     */
+    getTicketsStatistics: req => {
+      const { query } = req || {};
+
+      if (!query) throw new Error("query is required for statistics");
+
+      return fetch(`${this.base}/statistics/tickets`, {
+        method: "GET",
+        query,
+        headers: { Authorization: this.auth },
+      });
+    },
+  };
 }
