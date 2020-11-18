@@ -31,7 +31,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn
       - name: Build Package
         run: NODE_ENV=production yarn build
       - name: Eslint
