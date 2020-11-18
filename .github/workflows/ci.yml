@@ -20,7 +20,14 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - uses: c-hive/gha-yarn-cache@v1
+      - name: Cache Dependencies
+        id: cache-node-modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-14-nodemodules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-14-nodemodules-
       - name: Install Dependencies
         run: yarn install
       - name: Build Package
