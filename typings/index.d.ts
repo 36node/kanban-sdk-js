@@ -89,6 +89,10 @@ declare global {
      */
     getTicket(req: GetTicketRequest): Promise<GetTicketResponse>;
     /**
+     * move ticket to another lane
+     */
+    moveTicket(req: MoveTicketRequest): Promise<MoveTicketResponse>;
+    /**
      * Create a ticket
      */
     createTicket(req: CreateTicketRequest): Promise<CreateTicketResponse>;
@@ -188,6 +192,10 @@ declare global {
        * 项目名称
        */
       name?: string;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
       /**
        * 项目负责人 (userId)
        */
@@ -386,6 +394,10 @@ declare global {
        */
       name?: string;
       /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
        * 项目负责人 (userId)
        */
       owner?: string;
@@ -477,6 +489,10 @@ declare global {
        * 项目名称
        */
       name?: string;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
       /**
        * 项目负责人 (userId)
        */
@@ -678,6 +694,10 @@ declare global {
        */
       name?: string;
       /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
        * 项目负责人 (userId)
        */
       owner?: string;
@@ -876,6 +896,10 @@ declare global {
        */
       name?: string;
       /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
        * 项目负责人 (userId)
        */
       owner?: string;
@@ -956,6 +980,10 @@ declare global {
        * 项目名称
        */
       name?: string;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
       /**
        * 项目负责人 (userId)
        */
@@ -1897,6 +1925,10 @@ declare global {
        */
       level?: number;
       /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
        * 优先级
        */
       priority?: 0 | 1 | 2;
@@ -2030,6 +2062,153 @@ declare global {
        */
       level?: number;
       /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
+       * 优先级
+       */
+      priority?: 0 | 1 | 2;
+      /**
+       * 发布人 (userId)
+       */
+      publishBy?: string | null;
+      /**
+       * 发布时间
+       */
+      publishAt?: Date;
+      /**
+       * 备注
+       */
+      remark?: string;
+      /**
+       * 是否 reopened 过
+       */
+      reopen?: boolean;
+      reopenAt?: Date;
+      reopenBy?: string;
+      /**
+       * 状态
+       */
+      state?: "OPEN" | "CLOSED";
+      /**
+       * 领取时间
+       */
+      takeAt?: Date;
+      /**
+       * 领取人 (userId)
+       */
+      takeBy?: string | null;
+      /**
+       * 创建时间
+       */
+      createAt?: Date;
+      /**
+       * 创建人 (userId)
+       */
+      createBy?: string;
+      /**
+       * ticket 的标题
+       */
+      title?: string;
+      /**
+       * ticket 的内容
+       */
+      content?: string;
+      /**
+       * 额外的第三方数据，用于一些特殊处理
+       */
+      data?: string;
+    } & {
+      id: string;
+      updateAt?: Date;
+      updateBy?: string;
+      createAt?: Date;
+      createBy?: string;
+    };
+  }
+  export interface MoveTicketRequest {
+    ticketId: string;
+    /**
+     * Ticket Move body
+     */
+    body: {
+      /**
+       * the lane which is the destination of current action
+       */
+      lane?: string;
+    };
+  }
+  export interface MoveTicketResponse {
+    /**
+     * 工单
+     */
+    content?: {
+      /**
+       * 所属项目 (projectId)
+       */
+      project?: string;
+      /**
+       * 所属里程碑 (milestoneId)
+       */
+      milestone?: string;
+      /**
+       * 所属泳道 (laneId)
+       */
+      lane?: string;
+      repositories?: string[];
+      refs?: {
+        /**
+         * 资源在第三方的 origin id
+         */
+        oid: string;
+        /**
+         * 来源
+         */
+        source: string;
+        /**
+         * 名称
+         */
+        name?: string;
+        /**
+         * 描述
+         */
+        description?: string;
+        /**
+         * 类型
+         */
+        type?: string;
+        /**
+         * 唯一地址
+         */
+        uri?: string;
+      }[];
+      /**
+       * 赏金
+       */
+      bounty?: number;
+      /**
+       * 额外奖励
+       */
+      bonus?: number;
+      /**
+       * 截止时间
+       */
+      deadline?: Date;
+      /**
+       * 完成时间
+       */
+      doneAt?: Date;
+      labels?: string[];
+      /**
+       * 级别
+       */
+      level?: number;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
        * 优先级
        */
       priority?: 0 | 1 | 2;
@@ -2154,6 +2333,10 @@ declare global {
        * 级别
        */
       level?: number;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
       /**
        * 优先级
        */
@@ -2280,6 +2463,10 @@ declare global {
        * 级别
        */
       level?: number;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
       /**
        * 优先级
        */
@@ -2410,6 +2597,10 @@ declare global {
        */
       level?: number;
       /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
        * 优先级
        */
       priority?: 0 | 1 | 2;
@@ -2530,6 +2721,10 @@ declare global {
        * 级别
        */
       level?: number;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
       /**
        * 优先级
        */
@@ -2675,6 +2870,10 @@ declare global {
        */
       level?: number;
       /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
        * 优先级
        */
       priority?: 0 | 1 | 2;
@@ -2815,6 +3014,10 @@ declare global {
        */
       level?: number;
       /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
        * 优先级
        */
       priority?: 0 | 1 | 2;
@@ -2954,6 +3157,10 @@ declare global {
        * 级别
        */
       level?: number;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
       /**
        * 优先级
        */
