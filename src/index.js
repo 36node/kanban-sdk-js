@@ -94,7 +94,8 @@ export default class SDK {
     updateProject: req => {
       const { projectId, body } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for updateProject");
+      if (!projectId)
+        throw new Error("projectId is required for updateProject");
       if (!body) throw new Error("requetBody is required for updateProject");
 
       return fetch(`${this.base}/projects/${projectId}`, {
@@ -111,7 +112,8 @@ export default class SDK {
     deleteProject: req => {
       const { projectId } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for deleteProject");
+      if (!projectId)
+        throw new Error("projectId is required for deleteProject");
 
       return fetch(`${this.base}/projects/${projectId}`, {
         method: "DELETE",
@@ -127,7 +129,8 @@ export default class SDK {
     listRepositories: req => {
       const { projectId } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for listRepositories");
+      if (!projectId)
+        throw new Error("projectId is required for listRepositories");
 
       return fetch(`${this.base}/projects/${projectId}/repositories`, {
         method: "GET",
@@ -143,7 +146,8 @@ export default class SDK {
     createRepository: req => {
       const { projectId, body } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for createRepository");
+      if (!projectId)
+        throw new Error("projectId is required for createRepository");
       if (!body) throw new Error("requetBody is required for createRepository");
 
       return fetch(`${this.base}/projects/${projectId}/repositories`, {
@@ -161,13 +165,18 @@ export default class SDK {
     getRepository: req => {
       const { projectId, repositoryId } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for getRepository");
-      if (!repositoryId) throw new Error("repositoryId is required for getRepository");
+      if (!projectId)
+        throw new Error("projectId is required for getRepository");
+      if (!repositoryId)
+        throw new Error("repositoryId is required for getRepository");
 
-      return fetch(`${this.base}/projects/${projectId}/repositories/${repositoryId}`, {
-        method: "GET",
-        headers: { Authorization: this.auth },
-      });
+      return fetch(
+        `${this.base}/projects/${projectId}/repositories/${repositoryId}`,
+        {
+          method: "GET",
+          headers: { Authorization: this.auth },
+        }
+      );
     },
     /**
      * Update repository
@@ -178,15 +187,20 @@ export default class SDK {
     updateRepository: req => {
       const { projectId, repositoryId, body } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for updateRepository");
-      if (!repositoryId) throw new Error("repositoryId is required for updateRepository");
+      if (!projectId)
+        throw new Error("projectId is required for updateRepository");
+      if (!repositoryId)
+        throw new Error("repositoryId is required for updateRepository");
       if (!body) throw new Error("requetBody is required for updateRepository");
 
-      return fetch(`${this.base}/projects/${projectId}/repositories/${repositoryId}`, {
-        method: "PUT",
-        body,
-        headers: { Authorization: this.auth },
-      });
+      return fetch(
+        `${this.base}/projects/${projectId}/repositories/${repositoryId}`,
+        {
+          method: "PUT",
+          body,
+          headers: { Authorization: this.auth },
+        }
+      );
     },
     /**
      * Delete repository
@@ -196,13 +210,18 @@ export default class SDK {
     deleteRepository: req => {
       const { projectId, repositoryId } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for deleteRepository");
-      if (!repositoryId) throw new Error("repositoryId is required for deleteRepository");
+      if (!projectId)
+        throw new Error("projectId is required for deleteRepository");
+      if (!repositoryId)
+        throw new Error("repositoryId is required for deleteRepository");
 
-      return fetch(`${this.base}/projects/${projectId}/repositories/${repositoryId}`, {
-        method: "DELETE",
-        headers: { Authorization: this.auth },
-      });
+      return fetch(
+        `${this.base}/projects/${projectId}/repositories/${repositoryId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: this.auth },
+        }
+      );
     },
     /**
      * List all milestones
@@ -213,7 +232,8 @@ export default class SDK {
     listMilestones: req => {
       const { projectId } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for listMilestones");
+      if (!projectId)
+        throw new Error("projectId is required for listMilestones");
 
       return fetch(`${this.base}/projects/${projectId}/milestones`, {
         method: "GET",
@@ -229,7 +249,8 @@ export default class SDK {
     createMilestone: req => {
       const { projectId, body } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for createMilestone");
+      if (!projectId)
+        throw new Error("projectId is required for createMilestone");
       if (!body) throw new Error("requetBody is required for createMilestone");
 
       return fetch(`${this.base}/projects/${projectId}/milestones`, {
@@ -248,12 +269,16 @@ export default class SDK {
       const { projectId, milestoneId } = req || {};
 
       if (!projectId) throw new Error("projectId is required for getMilestone");
-      if (!milestoneId) throw new Error("milestoneId is required for getMilestone");
+      if (!milestoneId)
+        throw new Error("milestoneId is required for getMilestone");
 
-      return fetch(`${this.base}/projects/${projectId}/milestones/${milestoneId}`, {
-        method: "GET",
-        headers: { Authorization: this.auth },
-      });
+      return fetch(
+        `${this.base}/projects/${projectId}/milestones/${milestoneId}`,
+        {
+          method: "GET",
+          headers: { Authorization: this.auth },
+        }
+      );
     },
     /**
      * Update milestone
@@ -264,15 +289,20 @@ export default class SDK {
     updateMilestone: req => {
       const { projectId, milestoneId, body } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for updateMilestone");
-      if (!milestoneId) throw new Error("milestoneId is required for updateMilestone");
+      if (!projectId)
+        throw new Error("projectId is required for updateMilestone");
+      if (!milestoneId)
+        throw new Error("milestoneId is required for updateMilestone");
       if (!body) throw new Error("requetBody is required for updateMilestone");
 
-      return fetch(`${this.base}/projects/${projectId}/milestones/${milestoneId}`, {
-        method: "PUT",
-        body,
-        headers: { Authorization: this.auth },
-      });
+      return fetch(
+        `${this.base}/projects/${projectId}/milestones/${milestoneId}`,
+        {
+          method: "PUT",
+          body,
+          headers: { Authorization: this.auth },
+        }
+      );
     },
     /**
      * Delete milestone
@@ -282,13 +312,18 @@ export default class SDK {
     deleteMilestone: req => {
       const { projectId, milestoneId } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for deleteMilestone");
-      if (!milestoneId) throw new Error("milestoneId is required for deleteMilestone");
+      if (!projectId)
+        throw new Error("projectId is required for deleteMilestone");
+      if (!milestoneId)
+        throw new Error("milestoneId is required for deleteMilestone");
 
-      return fetch(`${this.base}/projects/${projectId}/milestones/${milestoneId}`, {
-        method: "DELETE",
-        headers: { Authorization: this.auth },
-      });
+      return fetch(
+        `${this.base}/projects/${projectId}/milestones/${milestoneId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: this.auth },
+        }
+      );
     },
   };
   /**
@@ -410,11 +445,14 @@ export default class SDK {
       if (!ticketId) throw new Error("ticketId is required for takeTicket");
       if (!body) throw new Error("requetBody is required for takeTicket");
 
-      return fetch(`${this.base}/projects/${projectId}/tickets/${ticketId}/!take`, {
-        method: "POST",
-        body,
-        headers: { Authorization: this.auth },
-      });
+      return fetch(
+        `${this.base}/projects/${projectId}/tickets/${ticketId}/!take`,
+        {
+          method: "POST",
+          body,
+          headers: { Authorization: this.auth },
+        }
+      );
     },
     /**
      * candidate undo ticket
@@ -429,11 +467,14 @@ export default class SDK {
       if (!ticketId) throw new Error("ticketId is required for undoTicket");
       if (!body) throw new Error("requetBody is required for undoTicket");
 
-      return fetch(`${this.base}/projects/${projectId}/tickets/${ticketId}/!undo`, {
-        method: "POST",
-        body,
-        headers: { Authorization: this.auth },
-      });
+      return fetch(
+        `${this.base}/projects/${projectId}/tickets/${ticketId}/!undo`,
+        {
+          method: "POST",
+          body,
+          headers: { Authorization: this.auth },
+        }
+      );
     },
     /**
      * candidate done ticket
@@ -448,11 +489,14 @@ export default class SDK {
       if (!ticketId) throw new Error("ticketId is required for doneTicket");
       if (!body) throw new Error("requetBody is required for doneTicket");
 
-      return fetch(`${this.base}/projects/${projectId}/tickets/${ticketId}/!done`, {
-        method: "POST",
-        body,
-        headers: { Authorization: this.auth },
-      });
+      return fetch(
+        `${this.base}/projects/${projectId}/tickets/${ticketId}/!done`,
+        {
+          method: "POST",
+          body,
+          headers: { Authorization: this.auth },
+        }
+      );
     },
   };
   /**
