@@ -94,10 +94,10 @@
     webpack-dev-server "3.2.1"
     webpack-filter-warnings-plugin "^1.2.1"
 
-"@36node/swagen@^0.17.11":
-  version "0.17.11"
-  resolved "https://registry.yarnpkg.com/@36node/swagen/-/swagen-0.17.11.tgz#10d2cfc0819f552827d26543724ecdc0b9b127f2"
-  integrity sha512-TBS3AhFs4Z+PXpYCHbeXgQfEYoLazIXlXWhcEqLS6omTlD/OLnmtUbYbWvrNMMTj0X/jwzJAnXqLZHMbf/w2+Q==
+"@36node/swagen@^0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@36node/swagen/-/swagen-0.18.0.tgz#3e20d741321732d8a12cddabdabff8806a4145b6"
+  integrity sha512-CZPOEuVoZE5++n3X5RI9Y6OvBE9q6AkaqudIcYIcPYUnL+nF0Ht7wqW2Kqe/28QkJGXT/0POee8M5sbynlJdHw==
   dependencies:
     "@36node/query-normalizr" "^0.5.0"
     handlebars "^4.0.12"
