@@ -158,7 +158,7 @@ export interface ListProjectsRequest {
   };
 }
 export interface ListProjectsResponse {
-  content: ({
+  body: ({
     /**
      * 项目实际开始激活的时间
      */
@@ -355,7 +355,7 @@ export interface ListProjectsResponse {
     createBy?: string;
   })[];
   headers: {
-    "X-Total-Count"?: number;
+    "x-total-count"?: number;
   };
 }
 export interface CreateProjectRequest {
@@ -455,7 +455,7 @@ export interface CreateProjectResponse {
   /**
    * 项目
    */
-  content: {
+  body: {
     /**
      * 项目实际开始激活的时间
      */
@@ -659,7 +659,7 @@ export interface GetProjectResponse {
   /**
    * 项目
    */
-  content: {
+  body: {
     /**
      * 项目实际开始激活的时间
      */
@@ -946,7 +946,7 @@ export interface UpdateProjectResponse {
   /**
    * 项目
    */
-  content: {
+  body: {
     /**
      * 项目实际开始激活的时间
      */
@@ -1150,7 +1150,7 @@ export interface ListRepositoriesRequest {
   projectId: string;
 }
 export interface ListRepositoriesResponse {
-  content: ({
+  body: ({
     /**
      * 工程描述
      */
@@ -1193,7 +1193,7 @@ export interface ListRepositoriesResponse {
     createBy?: string;
   })[];
   headers: {
-    "X-Total-Count"?: number;
+    "x-total-count"?: number;
   };
 }
 export interface CreateRepositoryRequest {
@@ -1244,7 +1244,7 @@ export interface CreateRepositoryResponse {
   /**
    * 工程
    */
-  content: {
+  body: {
     /**
      * 工程描述
      */
@@ -1295,7 +1295,7 @@ export interface GetRepositoryResponse {
   /**
    * 工程
    */
-  content: {
+  body: {
     /**
      * 工程描述
      */
@@ -1385,7 +1385,7 @@ export interface UpdateRepositoryResponse {
   /**
    * 工程
    */
-  content: {
+  body: {
     /**
      * 工程描述
      */
@@ -1436,7 +1436,7 @@ export interface ListMilestonesRequest {
   projectId: string;
 }
 export interface ListMilestonesResponse {
-  content: ({
+  body: ({
     /**
      * 计划开始时间
      */
@@ -1499,7 +1499,7 @@ export interface ListMilestonesResponse {
     createBy?: string;
   })[];
   headers: {
-    "X-Total-Count"?: number;
+    "x-total-count"?: number;
   };
 }
 export interface CreateMilestoneRequest {
@@ -1570,7 +1570,7 @@ export interface CreateMilestoneResponse {
   /**
    * 里程碑
    */
-  content: {
+  body: {
     /**
      * 计划开始时间
      */
@@ -1641,7 +1641,7 @@ export interface GetMilestoneResponse {
   /**
    * 里程碑
    */
-  content: {
+  body: {
     /**
      * 计划开始时间
      */
@@ -1771,7 +1771,7 @@ export interface UpdateMilestoneResponse {
   /**
    * 里程碑
    */
-  content: {
+  body: {
     /**
      * 计划开始时间
      */
@@ -1862,7 +1862,7 @@ export interface ListTicketsRequest {
   };
 }
 export interface ListTicketsResponse {
-  content: ({
+  body: ({
     /**
      * 所属项目 (projectId)
      */
@@ -1989,7 +1989,7 @@ export interface ListTicketsResponse {
     createBy?: string;
   })[];
   headers: {
-    "X-Total-Count"?: number;
+    "x-total-count"?: number;
   };
 }
 export interface GetTicketRequest {
@@ -1999,7 +1999,7 @@ export interface GetTicketResponse {
   /**
    * 工单
    */
-  content: {
+  body: {
     /**
      * 所属项目 (projectId)
      */
@@ -2142,7 +2142,7 @@ export interface MoveTicketResponse {
   /**
    * 工单
    */
-  content: {
+  body: {
     /**
      * 所属项目 (projectId)
      */
@@ -2401,7 +2401,7 @@ export interface CreateTicketResponse {
   /**
    * 工单
    */
-  content: {
+  body: {
     /**
      * 所属项目 (projectId)
      */
@@ -2659,7 +2659,7 @@ export interface UpdateTicketResponse {
   /**
    * 工单
    */
-  content: {
+  body: {
     /**
      * 所属项目 (projectId)
      */
@@ -2807,7 +2807,7 @@ export interface TakeTicketResponse {
   /**
    * 工单
    */
-  content: {
+  body: {
     /**
      * 所属项目 (projectId)
      */
@@ -2951,7 +2951,7 @@ export interface UndoTicketResponse {
   /**
    * 工单
    */
-  content: {
+  body: {
     /**
      * 所属项目 (projectId)
      */
@@ -3095,7 +3095,7 @@ export interface DoneTicketResponse {
   /**
    * 工单
    */
-  content: {
+  body: {
     /**
      * 所属项目 (projectId)
      */
@@ -3232,7 +3232,7 @@ export interface ListLanesRequest {
   };
 }
 export interface ListLanesResponse {
-  content: ({
+  body: ({
     /**
      * 泳道描述
      */
@@ -3287,7 +3287,7 @@ export interface ListLanesResponse {
     createBy?: string;
   })[];
   headers: {
-    "X-Total-Count"?: number;
+    "x-total-count"?: number;
   };
 }
 export interface CreateLaneRequest {
@@ -3349,7 +3349,7 @@ export interface CreateLaneResponse {
   /**
    * 泳道可以独立于project存在
    */
-  content: {
+  body: {
     /**
      * 泳道描述
      */
@@ -3411,7 +3411,7 @@ export interface GetLaneResponse {
   /**
    * 泳道可以独立于project存在
    */
-  content: {
+  body: {
     /**
      * 泳道描述
      */
@@ -3524,7 +3524,7 @@ export interface UpdateLaneResponse {
   /**
    * 泳道可以独立于project存在
    */
-  content: {
+  body: {
     /**
      * 泳道描述
      */
@@ -3605,7 +3605,7 @@ export interface GetTicketsStatisticsRequest {
   };
 }
 export interface GetTicketsStatisticsResponse {
-  content: {
+  body: {
     /**
      * 所属项目 (projectId)
      */
