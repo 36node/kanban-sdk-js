@@ -7,6 +7,7 @@ declare class SDK {
 
   project: ProjectAPI;
   ticket: TicketAPI;
+  repository: RepositoryAPI;
   lane: LaneAPI;
   statistics: StatisticsAPI;
 }
@@ -37,26 +38,6 @@ export interface ProjectAPI {
    * Delete project
    */
   deleteProject(req: DeleteProjectRequest): Promise<void>;
-  /**
-   * List all repositories
-   */
-  listRepositories(req: ListRepositoriesRequest): Promise<ListRepositoriesResponse>;
-  /**
-   * Create a repository
-   */
-  createRepository(req: CreateRepositoryRequest): Promise<CreateRepositoryResponse>;
-  /**
-   * Find repository by id
-   */
-  getRepository(req: GetRepositoryRequest): Promise<GetRepositoryResponse>;
-  /**
-   * Update repository
-   */
-  updateRepository(req: UpdateRepositoryRequest): Promise<UpdateRepositoryResponse>;
-  /**
-   * Delete repository
-   */
-  deleteRepository(req: DeleteRepositoryRequest): Promise<void>;
   /**
    * List all milestones
    */
@@ -116,6 +97,28 @@ export interface TicketAPI {
    */
   doneTicket(req: DoneTicketRequest): Promise<DoneTicketResponse>;
 }
+export interface RepositoryAPI {
+  /**
+   * List all repositories
+   */
+  listRepositories(req: ListRepositoriesRequest): Promise<ListRepositoriesResponse>;
+  /**
+   * Create a repository
+   */
+  createRepository(req: CreateRepositoryRequest): Promise<CreateRepositoryResponse>;
+  /**
+   * Find repository by id
+   */
+  getRepository(req: GetRepositoryRequest): Promise<GetRepositoryResponse>;
+  /**
+   * Update repository
+   */
+  updateRepository(req: UpdateRepositoryRequest): Promise<UpdateRepositoryResponse>;
+  /**
+   * Delete repository
+   */
+  deleteRepository(req: DeleteRepositoryRequest): Promise<void>;
+}
 export interface LaneAPI {
   /**
    * List all lanes
@@ -150,7 +153,7 @@ export interface ListProjectsRequest {
     _limit?: number;
     _offset?: number;
     _sort?: string;
-    _select?: string;
+    _select?: string[];
     owner?: string;
     name_like?: string;
     pm?: string;
@@ -162,7 +165,7 @@ export interface ListProjectsResponse {
     /**
      * 项目实际开始激活的时间
      */
-    activeAt?: string;
+    activeAt?: Date;
     /**
      * 项目实际关闭时间
      */
@@ -183,6 +186,14 @@ export interface ListProjectsResponse {
      * 行业
      */
     industry?: string;
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 标签
+     */
+    labels?: string[];
     /**
      * 项目logo
      */
@@ -268,51 +279,6 @@ export interface ListProjectsResponse {
       createAt?: Date;
       createBy?: string;
     })[];
-    /**
-     * 项目的子工程
-     */
-    repositories?: ({
-      /**
-       * 工程描述
-       */
-      description?: string;
-      /**
-       * 工程名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    })[];
     refs?: {
       /**
        * 资源在第三方的 origin id
@@ -363,7 +329,7 @@ export interface CreateProjectRequest {
     /**
      * 项目实际开始激活的时间
      */
-    activeAt?: string;
+    activeAt?: Date;
     /**
      * 项目实际关闭时间
      */
@@ -384,6 +350,14 @@ export interface CreateProjectRequest {
      * 行业
      */
     industry?: string;
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 标签
+     */
+    labels?: string[];
     /**
      * 项目logo
      */
@@ -446,9 +420,7 @@ export interface CreateProjectRequest {
     /**
      * 项目负责人 (userId)
      */
-    owner: {
-      [k: string]: any;
-    };
+    owner: string;
   };
 }
 export interface CreateProjectResponse {
@@ -459,7 +431,7 @@ export interface CreateProjectResponse {
     /**
      * 项目实际开始激活的时间
      */
-    activeAt?: string;
+    activeAt?: Date;
     /**
      * 项目实际关闭时间
      */
@@ -480,6 +452,14 @@ export interface CreateProjectResponse {
      * 行业
      */
     industry?: string;
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 标签
+     */
+    labels?: string[];
     /**
      * 项目logo
      */
@@ -558,51 +538,6 @@ export interface CreateProjectResponse {
        * 状态
        */
       state?: "OPEN" | "CLOSED";
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    })[];
-    /**
-     * 项目的子工程
-     */
-    repositories?: ({
-      /**
-       * 工程描述
-       */
-      description?: string;
-      /**
-       * 工程名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
     } & {
       id: string;
       updateAt?: Date;
@@ -663,7 +598,7 @@ export interface GetProjectResponse {
     /**
      * 项目实际开始激活的时间
      */
-    activeAt?: string;
+    activeAt?: Date;
     /**
      * 项目实际关闭时间
      */
@@ -684,6 +619,14 @@ export interface GetProjectResponse {
      * 行业
      */
     industry?: string;
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 标签
+     */
+    labels?: string[];
     /**
      * 项目logo
      */
@@ -769,51 +712,6 @@ export interface GetProjectResponse {
       createAt?: Date;
       createBy?: string;
     })[];
-    /**
-     * 项目的子工程
-     */
-    repositories?: ({
-      /**
-       * 工程描述
-       */
-      description?: string;
-      /**
-       * 工程名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    })[];
     refs?: {
       /**
        * 资源在第三方的 origin id
@@ -865,7 +763,7 @@ export interface UpdateProjectRequest {
     /**
      * 项目实际开始激活的时间
      */
-    activeAt?: string;
+    activeAt?: Date;
     /**
      * 项目实际关闭时间
      */
@@ -886,6 +784,14 @@ export interface UpdateProjectRequest {
      * 行业
      */
     industry?: string;
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 标签
+     */
+    labels?: string[];
     /**
      * 项目logo
      */
@@ -950,7 +856,7 @@ export interface UpdateProjectResponse {
     /**
      * 项目实际开始激活的时间
      */
-    activeAt?: string;
+    activeAt?: Date;
     /**
      * 项目实际关闭时间
      */
@@ -971,6 +877,14 @@ export interface UpdateProjectResponse {
      * 行业
      */
     industry?: string;
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 标签
+     */
+    labels?: string[];
     /**
      * 项目logo
      */
@@ -1056,51 +970,6 @@ export interface UpdateProjectResponse {
       createAt?: Date;
       createBy?: string;
     })[];
-    /**
-     * 项目的子工程
-     */
-    repositories?: ({
-      /**
-       * 工程描述
-       */
-      description?: string;
-      /**
-       * 工程名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    })[];
     refs?: {
       /**
        * 资源在第三方的 origin id
@@ -1145,292 +1014,6 @@ export interface UpdateProjectResponse {
 }
 export interface DeleteProjectRequest {
   projectId: string;
-}
-export interface ListRepositoriesRequest {
-  projectId: string;
-}
-export interface ListRepositoriesResponse {
-  body: ({
-    /**
-     * 工程描述
-     */
-    description?: string;
-    /**
-     * 工程名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  })[];
-  headers: {
-    "x-total-count"?: number;
-  };
-}
-export interface CreateRepositoryRequest {
-  projectId: string;
-  body: {
-    /**
-     * 工程描述
-     */
-    description?: string;
-    /**
-     * 工程名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-  } & {
-    /**
-     * 项目名称
-     */
-    name: string;
-  };
-}
-export interface CreateRepositoryResponse {
-  /**
-   * 工程
-   */
-  body: {
-    /**
-     * 工程描述
-     */
-    description?: string;
-    /**
-     * 工程名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  };
-}
-export interface GetRepositoryRequest {
-  projectId: string;
-  repositoryId: string;
-}
-export interface GetRepositoryResponse {
-  /**
-   * 工程
-   */
-  body: {
-    /**
-     * 工程描述
-     */
-    description?: string;
-    /**
-     * 工程名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  };
-}
-export interface UpdateRepositoryRequest {
-  projectId: string;
-  repositoryId: string;
-  /**
-   * 工程，一个项目有多个工程
-   */
-  body: {
-    /**
-     * 工程描述
-     */
-    description?: string;
-    /**
-     * 工程名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-  };
-}
-export interface UpdateRepositoryResponse {
-  /**
-   * 工程
-   */
-  body: {
-    /**
-     * 工程描述
-     */
-    description?: string;
-    /**
-     * 工程名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  };
-}
-export interface DeleteRepositoryRequest {
-  projectId: string;
-  repositoryId: string;
 }
 export interface ListMilestonesRequest {
   projectId: string;
@@ -1843,26 +1426,39 @@ export interface ListTicketsRequest {
     _limit?: number;
     _offset?: number;
     _sort?: string;
-    _select?: string;
-    milestone?: string;
-    project?: string;
-    lane?: string;
-    repositories?: string;
-    priority?: 0 | 1 | 2;
+    _select?: string[];
+    milestone?: string[];
+    project?: string[];
+    lane?: string[];
+    repositories?: string[];
+    priority?: (0 | 1 | 2)[];
     reopen?: boolean;
-    deadline_gt?: Date;
-    deadline_lt?: Date;
+    deadline_gte?: Date;
+    deadline_lte?: Date;
     title_like?: string;
-    takeBy?: string;
-    createBy?: string;
-    publishBy?: string;
-    level?: number;
-    labels?: string;
+    takeBy?: string[];
+    publishBy?: string[];
+    level?: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7)[];
+    createBy?: string[];
+    labels?: string[];
     state?: "OPEN" | "CLOSED";
+    parent?: string[];
+    type?: ("EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT")[];
+    published?: boolean;
+    publishAt_lte?: Date;
+    publishAt_gte?: Date;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   };
 }
 export interface ListTicketsResponse {
   body: ({
+    /**
+     * 父级卡片
+     */
+    parent?: string;
     /**
      * 所属项目 (projectId)
      */
@@ -1915,21 +1511,15 @@ export interface ListTicketsResponse {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -1949,9 +1539,6 @@ export interface ListTicketsResponse {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -1966,10 +1553,6 @@ export interface ListTicketsResponse {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -1981,6 +1564,19 @@ export interface ListTicketsResponse {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   } & {
     id: string;
     updateAt?: Date;
@@ -2001,6 +1597,10 @@ export interface GetTicketResponse {
    */
   body: {
     /**
+     * 父级卡片
+     */
+    parent?: string;
+    /**
      * 所属项目 (projectId)
      */
     project?: string;
@@ -2052,21 +1652,15 @@ export interface GetTicketResponse {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -2086,9 +1680,6 @@ export interface GetTicketResponse {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -2103,10 +1694,6 @@ export interface GetTicketResponse {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -2118,6 +1705,19 @@ export interface GetTicketResponse {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   } & {
     id: string;
     updateAt?: Date;
@@ -2144,6 +1744,10 @@ export interface MoveTicketResponse {
    */
   body: {
     /**
+     * 父级卡片
+     */
+    parent?: string;
+    /**
      * 所属项目 (projectId)
      */
     project?: string;
@@ -2195,21 +1799,15 @@ export interface MoveTicketResponse {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -2229,9 +1827,6 @@ export interface MoveTicketResponse {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -2246,10 +1841,6 @@ export interface MoveTicketResponse {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -2261,6 +1852,19 @@ export interface MoveTicketResponse {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   } & {
     id: string;
     updateAt?: Date;
@@ -2273,6 +1877,10 @@ export interface CreateTicketRequest {
   projectId: string;
   body: {
     /**
+     * 父级卡片
+     */
+    parent?: string;
+    /**
      * 所属项目 (projectId)
      */
     project?: string;
@@ -2324,21 +1932,15 @@ export interface CreateTicketRequest {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -2358,9 +1960,6 @@ export interface CreateTicketRequest {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -2375,10 +1974,6 @@ export interface CreateTicketRequest {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -2390,6 +1985,19 @@ export interface CreateTicketRequest {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   } & {
     /**
      * ticket 的标题
@@ -2403,6 +2011,10 @@ export interface CreateTicketResponse {
    */
   body: {
     /**
+     * 父级卡片
+     */
+    parent?: string;
+    /**
      * 所属项目 (projectId)
      */
     project?: string;
@@ -2454,21 +2066,15 @@ export interface CreateTicketResponse {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -2488,9 +2094,6 @@ export interface CreateTicketResponse {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -2505,10 +2108,6 @@ export interface CreateTicketResponse {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -2520,6 +2119,19 @@ export interface CreateTicketResponse {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   } & {
     id: string;
     updateAt?: Date;
@@ -2536,6 +2148,10 @@ export interface UpdateTicketRequest {
    */
   body: {
     /**
+     * 父级卡片
+     */
+    parent?: string;
+    /**
      * 所属项目 (projectId)
      */
     project?: string;
@@ -2587,21 +2203,15 @@ export interface UpdateTicketRequest {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -2621,9 +2231,6 @@ export interface UpdateTicketRequest {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -2638,10 +2245,6 @@ export interface UpdateTicketRequest {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -2653,6 +2256,19 @@ export interface UpdateTicketRequest {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   };
 }
 export interface UpdateTicketResponse {
@@ -2661,6 +2277,10 @@ export interface UpdateTicketResponse {
    */
   body: {
     /**
+     * 父级卡片
+     */
+    parent?: string;
+    /**
      * 所属项目 (projectId)
      */
     project?: string;
@@ -2712,21 +2332,15 @@ export interface UpdateTicketResponse {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -2746,9 +2360,6 @@ export interface UpdateTicketResponse {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -2763,10 +2374,6 @@ export interface UpdateTicketResponse {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -2778,6 +2385,19 @@ export interface UpdateTicketResponse {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   } & {
     id: string;
     updateAt?: Date;
@@ -2809,6 +2429,10 @@ export interface TakeTicketResponse {
    */
   body: {
     /**
+     * 父级卡片
+     */
+    parent?: string;
+    /**
      * 所属项目 (projectId)
      */
     project?: string;
@@ -2860,21 +2484,15 @@ export interface TakeTicketResponse {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -2894,9 +2512,6 @@ export interface TakeTicketResponse {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -2911,10 +2526,6 @@ export interface TakeTicketResponse {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -2926,6 +2537,19 @@ export interface TakeTicketResponse {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   } & {
     id: string;
     updateAt?: Date;
@@ -2953,6 +2577,10 @@ export interface UndoTicketResponse {
    */
   body: {
     /**
+     * 父级卡片
+     */
+    parent?: string;
+    /**
      * 所属项目 (projectId)
      */
     project?: string;
@@ -3004,21 +2632,15 @@ export interface UndoTicketResponse {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -3038,9 +2660,6 @@ export interface UndoTicketResponse {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -3055,10 +2674,6 @@ export interface UndoTicketResponse {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -3070,6 +2685,19 @@ export interface UndoTicketResponse {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   } & {
     id: string;
     updateAt?: Date;
@@ -3097,6 +2725,10 @@ export interface DoneTicketResponse {
    */
   body: {
     /**
+     * 父级卡片
+     */
+    parent?: string;
+    /**
      * 所属项目 (projectId)
      */
     project?: string;
@@ -3148,21 +2780,15 @@ export interface DoneTicketResponse {
      */
     deadline?: Date;
     /**
-     * 完成时间
+     * 关闭时间
      */
-    doneAt?: Date;
+    closeAt?: Date;
     labels?: string[];
-    /**
-     * 级别
-     */
-    level?: number;
+    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /**
      * 所属命名空间
      */
     ns?: string;
-    /**
-     * 优先级
-     */
     priority?: 0 | 1 | 2;
     /**
      * 发布人 (userId)
@@ -3182,9 +2808,6 @@ export interface DoneTicketResponse {
     reopen?: boolean;
     reopenAt?: Date;
     reopenBy?: string;
-    /**
-     * 状态
-     */
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -3199,10 +2822,6 @@ export interface DoneTicketResponse {
      */
     createAt?: Date;
     /**
-     * 创建人 (userId)
-     */
-    createBy?: string;
-    /**
      * ticket 的标题
      */
     title?: string;
@@ -3214,6 +2833,19 @@ export interface DoneTicketResponse {
      * 额外的第三方数据，用于一些特殊处理
      */
     data?: string;
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+    /**
+     * 是否被发布
+     */
+    published?: boolean;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    shiftAt?: Date;
   } & {
     id: string;
     updateAt?: Date;
@@ -3222,13 +2854,378 @@ export interface DoneTicketResponse {
     createBy?: string;
   };
 }
-export interface ListLanesRequest {
+export interface ListRepositoriesRequest {
   query?: {
-    project?: string;
     _limit?: number;
     _offset?: number;
     _sort?: string;
-    _select?: string;
+    _select?: string[];
+    project?: string[];
+    labels?: string[];
+  };
+}
+export interface ListRepositoriesResponse {
+  body: ({
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 工程描述
+     */
+    description?: string;
+    /**
+     * 标签
+     */
+    labels?: string[];
+    /**
+     * 工程名称
+     */
+    name?: string;
+    /**
+     * 项目 ID
+     */
+    project?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+  } & {
+    id: string;
+    updateAt?: Date;
+    updateBy?: string;
+    createAt?: Date;
+    createBy?: string;
+  })[];
+  headers: {
+    "x-total-count"?: number;
+  };
+}
+export interface CreateRepositoryRequest {
+  body: {
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 工程描述
+     */
+    description?: string;
+    /**
+     * 标签
+     */
+    labels?: string[];
+    /**
+     * 工程名称
+     */
+    name?: string;
+    /**
+     * 项目 ID
+     */
+    project?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+  } & {
+    /**
+     * 工程名称
+     */
+    name: string;
+    /**
+     * 项目 ID
+     */
+    project: string;
+  };
+}
+export interface CreateRepositoryResponse {
+  /**
+   * 工程
+   */
+  body: {
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 工程描述
+     */
+    description?: string;
+    /**
+     * 标签
+     */
+    labels?: string[];
+    /**
+     * 工程名称
+     */
+    name?: string;
+    /**
+     * 项目 ID
+     */
+    project?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+  } & {
+    id: string;
+    updateAt?: Date;
+    updateBy?: string;
+    createAt?: Date;
+    createBy?: string;
+  };
+}
+export interface GetRepositoryRequest {
+  repositoryId: string;
+}
+export interface GetRepositoryResponse {
+  /**
+   * 工程
+   */
+  body: {
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 工程描述
+     */
+    description?: string;
+    /**
+     * 标签
+     */
+    labels?: string[];
+    /**
+     * 工程名称
+     */
+    name?: string;
+    /**
+     * 项目 ID
+     */
+    project?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+  } & {
+    id: string;
+    updateAt?: Date;
+    updateBy?: string;
+    createAt?: Date;
+    createBy?: string;
+  };
+}
+export interface UpdateRepositoryRequest {
+  repositoryId: string;
+  /**
+   * 工程，一个项目有多个工程
+   */
+  body: {
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 工程描述
+     */
+    description?: string;
+    /**
+     * 标签
+     */
+    labels?: string[];
+    /**
+     * 工程名称
+     */
+    name?: string;
+    /**
+     * 项目 ID
+     */
+    project?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+  };
+}
+export interface UpdateRepositoryResponse {
+  /**
+   * 工程
+   */
+  body: {
+    /**
+     * 协作者
+     */
+    collaborators?: string[];
+    /**
+     * 工程描述
+     */
+    description?: string;
+    /**
+     * 标签
+     */
+    labels?: string[];
+    /**
+     * 工程名称
+     */
+    name?: string;
+    /**
+     * 项目 ID
+     */
+    project?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+  } & {
+    id: string;
+    updateAt?: Date;
+    updateBy?: string;
+    createAt?: Date;
+    createBy?: string;
+  };
+}
+export interface DeleteRepositoryRequest {
+  repositoryId: string;
+}
+export interface ListLanesRequest {
+  query?: {
+    _limit?: number;
+    _offset?: number;
+    _sort?: string;
+    _select?: string[];
+    project?: string[];
   };
 }
 export interface ListLanesResponse {
@@ -3584,28 +3581,49 @@ export interface DeleteLaneRequest {
 }
 export interface GetTicketsStatisticsRequest {
   query?: {
-    _group:
-      | ("lane" | "milestone" | "level" | "priority" | "state" | "project" | "takeBy")
-      | ("lane" | "milestone" | "level" | "priority" | "state" | "project" | "takeBy")[];
-    milestone?: string;
-    project?: string;
-    lane?: string;
-    repositories?: string;
-    priority?: 0 | 1 | 2;
+    _group?: (
+      | "id"
+      | "lane"
+      | "milestone"
+      | "level"
+      | "priority"
+      | "state"
+      | "project"
+      | "takeBy"
+      | "type"
+      | "risk"
+    )[];
+    milestone?: string[];
+    project?: string[];
+    lane?: string[];
+    repositories?: string[];
+    priority?: (0 | 1 | 2)[];
     reopen?: boolean;
-    deadline_gt?: Date;
-    deadline_lt?: Date;
+    deadline_gte?: Date;
+    deadline_lte?: Date;
     title_like?: string;
-    takeBy?: string;
-    createBy?: string;
-    publishBy?: string;
-    level?: number;
-    labels?: string;
+    takeBy?: string[];
+    publishBy?: string[];
+    level?: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7)[];
+    createBy?: string[];
+    labels?: string[];
     state?: "OPEN" | "CLOSED";
+    type?: ("EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT")[];
+    published?: boolean;
+    publishAt_lte?: Date;
+    publishAt_gte?: Date;
+    /**
+     * ticket risk
+     */
+    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   };
 }
 export interface GetTicketsStatisticsResponse {
   body: {
+    /**
+     * ticket id
+     */
+    id?: string;
     /**
      * 所属项目 (projectId)
      */
@@ -3623,23 +3641,57 @@ export interface GetTicketsStatisticsResponse {
      */
     level?: number;
     /**
-     * 优先级
-     */
-    priority?: 0 | 1 | 2;
-    /**
      * 领取人 (userId)
      */
     takeBy?: string | null;
-    /**
-     * 状态
-     */
+    priority?: 0 | 1 | 2;
     state?: "OPEN" | "CLOSED";
+    /**
+     * ticket 类型
+     */
+    type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
     /**
      * 统计数量
      */
     count?: number;
+    /**
+     * 任务风险
+     */
+    risk?: string;
   }[];
 }
+export type DateTime = Date;
+
+export type ObjectId = string;
+
+export type TicketPriority = 0 | 1 | 2;
+
+export type TicketLevel = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export type State = "OPEN" | "CLOSED";
+
+/**
+ * ticket risk
+ */
+export type TicketRisk = "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+
+export type TicketStatisticGroup =
+  | "id"
+  | "lane"
+  | "milestone"
+  | "level"
+  | "priority"
+  | "state"
+  | "project"
+  | "takeBy"
+  | "type"
+  | "risk";
+
+/**
+ * ticket 类型
+ */
+export type TicketType = "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+
 /**
  * 第三方资源关联
  */
@@ -3677,7 +3729,7 @@ export interface ProjectDoc {
   /**
    * 项目实际开始激活的时间
    */
-  activeAt?: string;
+  activeAt?: Date;
   /**
    * 项目实际关闭时间
    */
@@ -3698,6 +3750,14 @@ export interface ProjectDoc {
    * 行业
    */
   industry?: string;
+  /**
+   * 协作者
+   */
+  collaborators?: string[];
+  /**
+   * 标签
+   */
+  labels?: string[];
   /**
    * 项目logo
    */
@@ -3776,51 +3836,6 @@ export interface ProjectDoc {
      * 状态
      */
     state?: "OPEN" | "CLOSED";
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  })[];
-  /**
-   * 项目的子工程
-   */
-  repositories?: ({
-    /**
-     * 工程描述
-     */
-    description?: string;
-    /**
-     * 工程名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
   } & {
     id: string;
     updateAt?: Date;
@@ -3868,7 +3883,7 @@ export type ProjectCreateDoc = {
   /**
    * 项目实际开始激活的时间
    */
-  activeAt?: string;
+  activeAt?: Date;
   /**
    * 项目实际关闭时间
    */
@@ -3889,6 +3904,14 @@ export type ProjectCreateDoc = {
    * 行业
    */
   industry?: string;
+  /**
+   * 协作者
+   */
+  collaborators?: string[];
+  /**
+   * 标签
+   */
+  labels?: string[];
   /**
    * 项目logo
    */
@@ -3967,51 +3990,6 @@ export type ProjectCreateDoc = {
      * 状态
      */
     state?: "OPEN" | "CLOSED";
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  })[];
-  /**
-   * 项目的子工程
-   */
-  repositories?: ({
-    /**
-     * 工程描述
-     */
-    description?: string;
-    /**
-     * 工程名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
   } & {
     id: string;
     updateAt?: Date;
@@ -4061,9 +4039,7 @@ export type ProjectCreateDoc = {
   /**
    * 项目负责人 (userId)
    */
-  owner: {
-    [k: string]: any;
-  };
+  owner: string;
 };
 
 /**
@@ -4073,7 +4049,7 @@ export type Project = {
   /**
    * 项目实际开始激活的时间
    */
-  activeAt?: string;
+  activeAt?: Date;
   /**
    * 项目实际关闭时间
    */
@@ -4094,6 +4070,14 @@ export type Project = {
    * 行业
    */
   industry?: string;
+  /**
+   * 协作者
+   */
+  collaborators?: string[];
+  /**
+   * 标签
+   */
+  labels?: string[];
   /**
    * 项目logo
    */
@@ -4172,51 +4156,6 @@ export type Project = {
      * 状态
      */
     state?: "OPEN" | "CLOSED";
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  })[];
-  /**
-   * 项目的子工程
-   */
-  repositories?: ({
-    /**
-     * 工程描述
-     */
-    description?: string;
-    /**
-     * 工程名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
   } & {
     id: string;
     updateAt?: Date;
@@ -4271,13 +4210,25 @@ export type Project = {
  */
 export interface RepositoryDoc {
   /**
+   * 协作者
+   */
+  collaborators?: string[];
+  /**
    * 工程描述
    */
   description?: string;
   /**
+   * 标签
+   */
+  labels?: string[];
+  /**
    * 工程名称
    */
   name?: string;
+  /**
+   * 项目 ID
+   */
+  project?: string;
   refs?: {
     /**
      * 资源在第三方的 origin id
@@ -4308,13 +4259,25 @@ export interface RepositoryDoc {
 
 export type RepositoryCreateDoc = {
   /**
+   * 协作者
+   */
+  collaborators?: string[];
+  /**
    * 工程描述
    */
   description?: string;
   /**
+   * 标签
+   */
+  labels?: string[];
+  /**
    * 工程名称
    */
   name?: string;
+  /**
+   * 项目 ID
+   */
+  project?: string;
   refs?: {
     /**
      * 资源在第三方的 origin id
@@ -4343,9 +4306,13 @@ export type RepositoryCreateDoc = {
   }[];
 } & {
   /**
-   * 项目名称
+   * 工程名称
    */
   name: string;
+  /**
+   * 项目 ID
+   */
+  project: string;
 };
 
 /**
@@ -4353,13 +4320,25 @@ export type RepositoryCreateDoc = {
  */
 export type Repository = {
   /**
+   * 协作者
+   */
+  collaborators?: string[];
+  /**
    * 工程描述
    */
   description?: string;
   /**
+   * 标签
+   */
+  labels?: string[];
+  /**
    * 工程名称
    */
   name?: string;
+  /**
+   * 项目 ID
+   */
+  project?: string;
   refs?: {
     /**
      * 资源在第三方的 origin id
@@ -4791,6 +4770,10 @@ export interface TicketMoveDoc {
  */
 export interface TicketStats {
   /**
+   * ticket id
+   */
+  id?: string;
+  /**
    * 所属项目 (projectId)
    */
   project?: string;
@@ -4807,21 +4790,23 @@ export interface TicketStats {
    */
   level?: number;
   /**
-   * 优先级
-   */
-  priority?: 0 | 1 | 2;
-  /**
    * 领取人 (userId)
    */
   takeBy?: string | null;
-  /**
-   * 状态
-   */
+  priority?: 0 | 1 | 2;
   state?: "OPEN" | "CLOSED";
+  /**
+   * ticket 类型
+   */
+  type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
   /**
    * 统计数量
    */
   count?: number;
+  /**
+   * 任务风险
+   */
+  risk?: string;
 }
 
 /**
@@ -4829,6 +4814,10 @@ export interface TicketStats {
  */
 export interface TicketDoc {
   /**
+   * 父级卡片
+   */
+  parent?: string;
+  /**
    * 所属项目 (projectId)
    */
   project?: string;
@@ -4880,21 +4869,15 @@ export interface TicketDoc {
    */
   deadline?: Date;
   /**
-   * 完成时间
+   * 关闭时间
    */
-  doneAt?: Date;
+  closeAt?: Date;
   labels?: string[];
-  /**
-   * 级别
-   */
-  level?: number;
+  level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   /**
    * 所属命名空间
    */
   ns?: string;
-  /**
-   * 优先级
-   */
   priority?: 0 | 1 | 2;
   /**
    * 发布人 (userId)
@@ -4914,9 +4897,6 @@ export interface TicketDoc {
   reopen?: boolean;
   reopenAt?: Date;
   reopenBy?: string;
-  /**
-   * 状态
-   */
   state?: "OPEN" | "CLOSED";
   /**
    * 领取时间
@@ -4931,10 +4911,6 @@ export interface TicketDoc {
    */
   createAt?: Date;
   /**
-   * 创建人 (userId)
-   */
-  createBy?: string;
-  /**
    * ticket 的标题
    */
   title?: string;
@@ -4946,10 +4922,27 @@ export interface TicketDoc {
    * 额外的第三方数据，用于一些特殊处理
    */
   data?: string;
+  /**
+   * ticket 类型
+   */
+  type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+  /**
+   * 是否被发布
+   */
+  published?: boolean;
+  /**
+   * ticket risk
+   */
+  risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+  shiftAt?: Date;
 }
 
 export type TicketCreateDoc = {
   /**
+   * 父级卡片
+   */
+  parent?: string;
+  /**
    * 所属项目 (projectId)
    */
   project?: string;
@@ -5001,21 +4994,15 @@ export type TicketCreateDoc = {
    */
   deadline?: Date;
   /**
-   * 完成时间
+   * 关闭时间
    */
-  doneAt?: Date;
+  closeAt?: Date;
   labels?: string[];
-  /**
-   * 级别
-   */
-  level?: number;
+  level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   /**
    * 所属命名空间
    */
   ns?: string;
-  /**
-   * 优先级
-   */
   priority?: 0 | 1 | 2;
   /**
    * 发布人 (userId)
@@ -5035,9 +5022,6 @@ export type TicketCreateDoc = {
   reopen?: boolean;
   reopenAt?: Date;
   reopenBy?: string;
-  /**
-   * 状态
-   */
   state?: "OPEN" | "CLOSED";
   /**
    * 领取时间
@@ -5052,10 +5036,6 @@ export type TicketCreateDoc = {
    */
   createAt?: Date;
   /**
-   * 创建人 (userId)
-   */
-  createBy?: string;
-  /**
    * ticket 的标题
    */
   title?: string;
@@ -5067,6 +5047,19 @@ export type TicketCreateDoc = {
    * 额外的第三方数据，用于一些特殊处理
    */
   data?: string;
+  /**
+   * ticket 类型
+   */
+  type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+  /**
+   * 是否被发布
+   */
+  published?: boolean;
+  /**
+   * ticket risk
+   */
+  risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+  shiftAt?: Date;
 } & {
   /**
    * ticket 的标题
@@ -5079,6 +5072,10 @@ export type TicketCreateDoc = {
  */
 export type Ticket = {
   /**
+   * 父级卡片
+   */
+  parent?: string;
+  /**
    * 所属项目 (projectId)
    */
   project?: string;
@@ -5130,21 +5127,15 @@ export type Ticket = {
    */
   deadline?: Date;
   /**
-   * 完成时间
+   * 关闭时间
    */
-  doneAt?: Date;
+  closeAt?: Date;
   labels?: string[];
-  /**
-   * 级别
-   */
-  level?: number;
+  level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   /**
    * 所属命名空间
    */
   ns?: string;
-  /**
-   * 优先级
-   */
   priority?: 0 | 1 | 2;
   /**
    * 发布人 (userId)
@@ -5164,9 +5155,6 @@ export type Ticket = {
   reopen?: boolean;
   reopenAt?: Date;
   reopenBy?: string;
-  /**
-   * 状态
-   */
   state?: "OPEN" | "CLOSED";
   /**
    * 领取时间
@@ -5181,10 +5169,6 @@ export type Ticket = {
    */
   createAt?: Date;
   /**
-   * 创建人 (userId)
-   */
-  createBy?: string;
-  /**
    * ticket 的标题
    */
   title?: string;
@@ -5196,6 +5180,19 @@ export type Ticket = {
    * 额外的第三方数据，用于一些特殊处理
    */
   data?: string;
+  /**
+   * ticket 类型
+   */
+  type?: "EPIC" | "STORY" | "TASK" | "BUG" | "CHECKPOINT";
+  /**
+   * 是否被发布
+   */
+  published?: boolean;
+  /**
+   * ticket risk
+   */
+  risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+  shiftAt?: Date;
 } & {
   id: string;
   updateAt?: Date;

@@ -121,109 +121,6 @@ export default class SDK {
       });
     },
     /**
-     * List all repositories
-     *
-     * @param {ListRepositoriesRequest} req listRepositories request
-     * @returns {Promise<ListRepositoriesResponse>} A paged array of repositories
-     */
-    listRepositories: req => {
-      const { projectId } = req || {};
-
-      if (!projectId)
-        throw new Error("projectId is required for listRepositories");
-
-      return fetch(`${this.base}/projects/${projectId}/repositories`, {
-        method: "GET",
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Create a repository
-     *
-     * @param {CreateRepositoryRequest} req createRepository request
-     * @returns {Promise<CreateRepositoryResponse>} The repository created
-     */
-    createRepository: req => {
-      const { projectId, body } = req || {};
-
-      if (!projectId)
-        throw new Error("projectId is required for createRepository");
-      if (!body) throw new Error("requetBody is required for createRepository");
-
-      return fetch(`${this.base}/projects/${projectId}/repositories`, {
-        method: "POST",
-        body,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Find repository by id
-     *
-     * @param {GetRepositoryRequest} req getRepository request
-     * @returns {Promise<GetRepositoryResponse>} Expected response to a valid request
-     */
-    getRepository: req => {
-      const { projectId, repositoryId } = req || {};
-
-      if (!projectId)
-        throw new Error("projectId is required for getRepository");
-      if (!repositoryId)
-        throw new Error("repositoryId is required for getRepository");
-
-      return fetch(
-        `${this.base}/projects/${projectId}/repositories/${repositoryId}`,
-        {
-          method: "GET",
-          headers: { Authorization: this.auth },
-        }
-      );
-    },
-    /**
-     * Update repository
-     *
-     * @param {UpdateRepositoryRequest} req updateRepository request
-     * @returns {Promise<UpdateRepositoryResponse>} The repository
-     */
-    updateRepository: req => {
-      const { projectId, repositoryId, body } = req || {};
-
-      if (!projectId)
-        throw new Error("projectId is required for updateRepository");
-      if (!repositoryId)
-        throw new Error("repositoryId is required for updateRepository");
-      if (!body) throw new Error("requetBody is required for updateRepository");
-
-      return fetch(
-        `${this.base}/projects/${projectId}/repositories/${repositoryId}`,
-        {
-          method: "PUT",
-          body,
-          headers: { Authorization: this.auth },
-        }
-      );
-    },
-    /**
-     * Delete repository
-     *
-     * @param {DeleteRepositoryRequest} req deleteRepository request
-     */
-    deleteRepository: req => {
-      const { projectId, repositoryId } = req || {};
-
-      if (!projectId)
-        throw new Error("projectId is required for deleteRepository");
-      if (!repositoryId)
-        throw new Error("repositoryId is required for deleteRepository");
-
-      return fetch(
-        `${this.base}/projects/${projectId}/repositories/${repositoryId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: this.auth },
-        }
-      );
-    },
-    /**
      * List all milestones
      *
      * @param {ListMilestonesRequest} req listMilestones request
@@ -500,6 +397,95 @@ export default class SDK {
     },
   };
   /**
+   * repository's methods
+   */
+  repository = {
+    /**
+     * List all repositories
+     *
+     * @param {ListRepositoriesRequest} req listRepositories request
+     * @returns {Promise<ListRepositoriesResponse>} A paged array of repositories
+     */
+    listRepositories: req => {
+      const { query } = req || {};
+
+      return fetch(`${this.base}/repositories`, {
+        method: "GET",
+        query,
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * Create a repository
+     *
+     * @param {CreateRepositoryRequest} req createRepository request
+     * @returns {Promise<CreateRepositoryResponse>} The repository created
+     */
+    createRepository: req => {
+      const { body } = req || {};
+
+      if (!body) throw new Error("requetBody is required for createRepository");
+
+      return fetch(`${this.base}/repositories`, {
+        method: "POST",
+        body,
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * Find repository by id
+     *
+     * @param {GetRepositoryRequest} req getRepository request
+     * @returns {Promise<GetRepositoryResponse>} Expected response to a valid request
+     */
+    getRepository: req => {
+      const { repositoryId } = req || {};
+
+      if (!repositoryId)
+        throw new Error("repositoryId is required for getRepository");
+
+      return fetch(`${this.base}/repositories/${repositoryId}`, {
+        method: "GET",
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * Update repository
+     *
+     * @param {UpdateRepositoryRequest} req updateRepository request
+     * @returns {Promise<UpdateRepositoryResponse>} The repository
+     */
+    updateRepository: req => {
+      const { repositoryId, body } = req || {};
+
+      if (!repositoryId)
+        throw new Error("repositoryId is required for updateRepository");
+      if (!body) throw new Error("requetBody is required for updateRepository");
+
+      return fetch(`${this.base}/repositories/${repositoryId}`, {
+        method: "PUT",
+        body,
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * Delete repository
+     *
+     * @param {DeleteRepositoryRequest} req deleteRepository request
+     */
+    deleteRepository: req => {
+      const { repositoryId } = req || {};
+
+      if (!repositoryId)
+        throw new Error("repositoryId is required for deleteRepository");
+
+      return fetch(`${this.base}/repositories/${repositoryId}`, {
+        method: "DELETE",
+        headers: { Authorization: this.auth },
+      });
+    },
+  };
+  /**
    * lane's methods
    */
   lane = {
@@ -597,8 +583,6 @@ export default class SDK {
      */
     getTicketsStatistics: req => {
       const { query } = req || {};
-
-      if (!query) throw new Error("query is required for statistics");
 
       return fetch(`${this.base}/statistics/tickets`, {
         method: "GET",
