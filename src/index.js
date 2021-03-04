@@ -121,106 +121,41 @@ export default class SDK {
       });
     },
     /**
-     * List all milestones
+     * add member for project
      *
-     * @param {ListMilestonesRequest} req listMilestones request
-     * @returns {Promise<ListMilestonesResponse>} A paged array of milestones
+     * @param {AddProjectMemberRequest} req addProjectMember request
+     * @returns {Promise<AddProjectMemberResponse>} The member
      */
-    listMilestones: req => {
-      const { projectId } = req || {};
-
-      if (!projectId)
-        throw new Error("projectId is required for listMilestones");
-
-      return fetch(`${this.base}/projects/${projectId}/milestones`, {
-        method: "GET",
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Create a milestone
-     *
-     * @param {CreateMilestoneRequest} req createMilestone request
-     * @returns {Promise<CreateMilestoneResponse>} The milestone created
-     */
-    createMilestone: req => {
+    addProjectMember: req => {
       const { projectId, body } = req || {};
 
       if (!projectId)
-        throw new Error("projectId is required for createMilestone");
-      if (!body) throw new Error("requetBody is required for createMilestone");
+        throw new Error("projectId is required for addProjectMember");
+      if (!body) throw new Error("requetBody is required for addProjectMember");
 
-      return fetch(`${this.base}/projects/${projectId}/milestones`, {
+      return fetch(`${this.base}/projects/${projectId}/members`, {
         method: "POST",
         body,
         headers: { Authorization: this.auth },
       });
     },
     /**
-     * Find milestone by id
+     * remove member for project
      *
-     * @param {GetMilestoneRequest} req getMilestone request
-     * @returns {Promise<GetMilestoneResponse>} Expected response to a valid request
+     * @param {DeleteProjectMemberRequest} req deleteProjectMember request
      */
-    getMilestone: req => {
-      const { projectId, milestoneId } = req || {};
-
-      if (!projectId) throw new Error("projectId is required for getMilestone");
-      if (!milestoneId)
-        throw new Error("milestoneId is required for getMilestone");
-
-      return fetch(
-        `${this.base}/projects/${projectId}/milestones/${milestoneId}`,
-        {
-          method: "GET",
-          headers: { Authorization: this.auth },
-        }
-      );
-    },
-    /**
-     * Update milestone
-     *
-     * @param {UpdateMilestoneRequest} req updateMilestone request
-     * @returns {Promise<UpdateMilestoneResponse>} The milestone
-     */
-    updateMilestone: req => {
-      const { projectId, milestoneId, body } = req || {};
+    deleteProjectMember: req => {
+      const { projectId, memberId } = req || {};
 
       if (!projectId)
-        throw new Error("projectId is required for updateMilestone");
-      if (!milestoneId)
-        throw new Error("milestoneId is required for updateMilestone");
-      if (!body) throw new Error("requetBody is required for updateMilestone");
+        throw new Error("projectId is required for deleteProjectMember");
+      if (!memberId)
+        throw new Error("memberId is required for deleteProjectMember");
 
-      return fetch(
-        `${this.base}/projects/${projectId}/milestones/${milestoneId}`,
-        {
-          method: "PUT",
-          body,
-          headers: { Authorization: this.auth },
-        }
-      );
-    },
-    /**
-     * Delete milestone
-     *
-     * @param {DeleteMilestoneRequest} req deleteMilestone request
-     */
-    deleteMilestone: req => {
-      const { projectId, milestoneId } = req || {};
-
-      if (!projectId)
-        throw new Error("projectId is required for deleteMilestone");
-      if (!milestoneId)
-        throw new Error("milestoneId is required for deleteMilestone");
-
-      return fetch(
-        `${this.base}/projects/${projectId}/milestones/${milestoneId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: this.auth },
-        }
-      );
+      return fetch(`${this.base}/projects/${projectId}/members/${memberId}`, {
+        method: "DELETE",
+        headers: { Authorization: this.auth },
+      });
     },
   };
   /**
@@ -397,6 +332,97 @@ export default class SDK {
     },
   };
   /**
+   * milestone's methods
+   */
+  milestone = {
+    /**
+     * List all milestones
+     *
+     * @param {ListMilestonesRequest} req listMilestones request
+     * @returns {Promise<ListMilestonesResponse>} A paged array of milestones
+     */
+    listMilestones: req => {
+      const { query } = req || {};
+
+      if (!query) throw new Error("query is required for milestone");
+
+      return fetch(`${this.base}/milestones`, {
+        method: "GET",
+        query,
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * Create a milestone
+     *
+     * @param {CreateMilestoneRequest} req createMilestone request
+     * @returns {Promise<CreateMilestoneResponse>} The milestone created
+     */
+    createMilestone: req => {
+      const { body } = req || {};
+
+      if (!body) throw new Error("requetBody is required for createMilestone");
+
+      return fetch(`${this.base}/milestones`, {
+        method: "POST",
+        body,
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * Find milestone by id
+     *
+     * @param {GetMilestoneRequest} req getMilestone request
+     * @returns {Promise<GetMilestoneResponse>} Expected response to a valid request
+     */
+    getMilestone: req => {
+      const { milestoneId } = req || {};
+
+      if (!milestoneId)
+        throw new Error("milestoneId is required for getMilestone");
+
+      return fetch(`${this.base}/milestones/${milestoneId}`, {
+        method: "GET",
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * Update milestone
+     *
+     * @param {UpdateMilestoneRequest} req updateMilestone request
+     * @returns {Promise<UpdateMilestoneResponse>} The milestone
+     */
+    updateMilestone: req => {
+      const { milestoneId, body } = req || {};
+
+      if (!milestoneId)
+        throw new Error("milestoneId is required for updateMilestone");
+      if (!body) throw new Error("requetBody is required for updateMilestone");
+
+      return fetch(`${this.base}/milestones/${milestoneId}`, {
+        method: "PUT",
+        body,
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * Delete milestone
+     *
+     * @param {DeleteMilestoneRequest} req deleteMilestone request
+     */
+    deleteMilestone: req => {
+      const { milestoneId } = req || {};
+
+      if (!milestoneId)
+        throw new Error("milestoneId is required for deleteMilestone");
+
+      return fetch(`${this.base}/milestones/${milestoneId}`, {
+        method: "DELETE",
+        headers: { Authorization: this.auth },
+      });
+    },
+  };
+  /**
    * repository's methods
    */
   repository = {
@@ -483,6 +509,53 @@ export default class SDK {
         method: "DELETE",
         headers: { Authorization: this.auth },
       });
+    },
+    /**
+     * add collaborator for repository
+     *
+     * @param {AddRepositoryCollaboratorRequest} req addRepositoryCollaborator request
+     * @returns {Promise<AddRepositoryCollaboratorResponse>} The User
+     */
+    addRepositoryCollaborator: req => {
+      const { repositoryId, body } = req || {};
+
+      if (!repositoryId)
+        throw new Error(
+          "repositoryId is required for addRepositoryCollaborator"
+        );
+      if (!body)
+        throw new Error("requetBody is required for addRepositoryCollaborator");
+
+      return fetch(`${this.base}/repositories/${repositoryId}/collaborators`, {
+        method: "POST",
+        body,
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * remove collaborator for repository
+     *
+     * @param {DeleteRepositoryCollaboratorRequest} req deleteRepositoryCollaborator request
+     */
+    deleteRepositoryCollaborator: req => {
+      const { repositoryId, collaboratorId } = req || {};
+
+      if (!repositoryId)
+        throw new Error(
+          "repositoryId is required for deleteRepositoryCollaborator"
+        );
+      if (!collaboratorId)
+        throw new Error(
+          "collaboratorId is required for deleteRepositoryCollaborator"
+        );
+
+      return fetch(
+        `${this.base}/repositories/${repositoryId}/collaborators/${collaboratorId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: this.auth },
+        }
+      );
     },
   };
   /**

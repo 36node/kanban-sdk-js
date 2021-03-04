@@ -7,6 +7,7 @@ declare class SDK {
 
   project: ProjectAPI;
   ticket: TicketAPI;
+  milestone: MilestoneAPI;
   repository: RepositoryAPI;
   lane: LaneAPI;
   statistics: StatisticsAPI;
@@ -39,25 +40,13 @@ export interface ProjectAPI {
    */
   deleteProject(req: DeleteProjectRequest): Promise<void>;
   /**
-   * List all milestones
+   * add member for project
    */
-  listMilestones(req: ListMilestonesRequest): Promise<ListMilestonesResponse>;
+  addProjectMember(req: AddProjectMemberRequest): Promise<AddProjectMemberResponse>;
   /**
-   * Create a milestone
+   * remove member for project
    */
-  createMilestone(req: CreateMilestoneRequest): Promise<CreateMilestoneResponse>;
-  /**
-   * Find milestone by id
-   */
-  getMilestone(req: GetMilestoneRequest): Promise<GetMilestoneResponse>;
-  /**
-   * Update milestone
-   */
-  updateMilestone(req: UpdateMilestoneRequest): Promise<UpdateMilestoneResponse>;
-  /**
-   * Delete milestone
-   */
-  deleteMilestone(req: DeleteMilestoneRequest): Promise<void>;
+  deleteProjectMember(req: DeleteProjectMemberRequest): Promise<void>;
 }
 export interface TicketAPI {
   /**
@@ -97,6 +86,28 @@ export interface TicketAPI {
    */
   doneTicket(req: DoneTicketRequest): Promise<DoneTicketResponse>;
 }
+export interface MilestoneAPI {
+  /**
+   * List all milestones
+   */
+  listMilestones(req: ListMilestonesRequest): Promise<ListMilestonesResponse>;
+  /**
+   * Create a milestone
+   */
+  createMilestone(req: CreateMilestoneRequest): Promise<CreateMilestoneResponse>;
+  /**
+   * Find milestone by id
+   */
+  getMilestone(req: GetMilestoneRequest): Promise<GetMilestoneResponse>;
+  /**
+   * Update milestone
+   */
+  updateMilestone(req: UpdateMilestoneRequest): Promise<UpdateMilestoneResponse>;
+  /**
+   * Delete milestone
+   */
+  deleteMilestone(req: DeleteMilestoneRequest): Promise<void>;
+}
 export interface RepositoryAPI {
   /**
    * List all repositories
@@ -118,6 +129,16 @@ export interface RepositoryAPI {
    * Delete repository
    */
   deleteRepository(req: DeleteRepositoryRequest): Promise<void>;
+  /**
+   * add collaborator for repository
+   */
+  addRepositoryCollaborator(
+    req: AddRepositoryCollaboratorRequest
+  ): Promise<AddRepositoryCollaboratorResponse>;
+  /**
+   * remove collaborator for repository
+   */
+  deleteRepositoryCollaborator(req: DeleteRepositoryCollaboratorRequest): Promise<void>;
 }
 export interface LaneAPI {
   /**
@@ -189,7 +210,7 @@ export interface ListProjectsResponse {
     /**
      * 协作者
      */
-    collaborators?: string[];
+    members?: string[];
     /**
      * 标签
      */
@@ -214,71 +235,6 @@ export interface ListProjectsResponse {
      * 项目管理人员 userid
      */
     pm?: string[];
-    /**
-     * 项目的里程碑
-     */
-    milestones?: ({
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 实际里程碑开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 实际里程碑关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 里程碑描述
-       */
-      description?: string;
-      /**
-       * 里程碑名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 状态
-       */
-      state?: "OPEN" | "CLOSED";
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    })[];
     refs?: {
       /**
        * 资源在第三方的 origin id
@@ -353,7 +309,7 @@ export interface CreateProjectRequest {
     /**
      * 协作者
      */
-    collaborators?: string[];
+    members?: string[];
     /**
      * 标签
      */
@@ -455,7 +411,7 @@ export interface CreateProjectResponse {
     /**
      * 协作者
      */
-    collaborators?: string[];
+    members?: string[];
     /**
      * 标签
      */
@@ -480,71 +436,6 @@ export interface CreateProjectResponse {
      * 项目管理人员 userid
      */
     pm?: string[];
-    /**
-     * 项目的里程碑
-     */
-    milestones?: ({
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 实际里程碑开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 实际里程碑关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 里程碑描述
-       */
-      description?: string;
-      /**
-       * 里程碑名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 状态
-       */
-      state?: "OPEN" | "CLOSED";
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    })[];
     refs?: {
       /**
        * 资源在第三方的 origin id
@@ -622,7 +513,7 @@ export interface GetProjectResponse {
     /**
      * 协作者
      */
-    collaborators?: string[];
+    members?: string[];
     /**
      * 标签
      */
@@ -647,71 +538,6 @@ export interface GetProjectResponse {
      * 项目管理人员 userid
      */
     pm?: string[];
-    /**
-     * 项目的里程碑
-     */
-    milestones?: ({
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 实际里程碑开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 实际里程碑关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 里程碑描述
-       */
-      description?: string;
-      /**
-       * 里程碑名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 状态
-       */
-      state?: "OPEN" | "CLOSED";
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    })[];
     refs?: {
       /**
        * 资源在第三方的 origin id
@@ -787,7 +613,7 @@ export interface UpdateProjectRequest {
     /**
      * 协作者
      */
-    collaborators?: string[];
+    members?: string[];
     /**
      * 标签
      */
@@ -880,7 +706,7 @@ export interface UpdateProjectResponse {
     /**
      * 协作者
      */
-    collaborators?: string[];
+    members?: string[];
     /**
      * 标签
      */
@@ -905,71 +731,6 @@ export interface UpdateProjectResponse {
      * 项目管理人员 userid
      */
     pm?: string[];
-    /**
-     * 项目的里程碑
-     */
-    milestones?: ({
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 实际里程碑开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 实际里程碑关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 里程碑描述
-       */
-      description?: string;
-      /**
-       * 里程碑名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 状态
-       */
-      state?: "OPEN" | "CLOSED";
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    })[];
     refs?: {
       /**
        * 资源在第三方的 origin id
@@ -1015,411 +776,26 @@ export interface UpdateProjectResponse {
 export interface DeleteProjectRequest {
   projectId: string;
 }
-export interface ListMilestonesRequest {
+export interface AddProjectMemberRequest {
   projectId: string;
-}
-export interface ListMilestonesResponse {
-  body: ({
+  body: {
     /**
-     * 计划开始时间
+     * member
      */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 实际里程碑开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 实际里程碑关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 里程碑描述
-     */
-    description?: string;
-    /**
-     * 里程碑名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 状态
-     */
-    state?: "OPEN" | "CLOSED";
-  } & {
     id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  })[];
-  headers: {
-    "x-total-count"?: number;
   };
 }
-export interface CreateMilestoneRequest {
-  projectId: string;
+export interface AddProjectMemberResponse {
   body: {
     /**
-     * 计划开始时间
+     * member
      */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 实际里程碑开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 实际里程碑关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 里程碑描述
-     */
-    description?: string;
-    /**
-     * 里程碑名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 状态
-     */
-    state?: "OPEN" | "CLOSED";
-  } & {
-    /**
-     * 里程碑名称
-     */
-    name: string;
-  };
-}
-export interface CreateMilestoneResponse {
-  /**
-   * 里程碑
-   */
-  body: {
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 实际里程碑开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 实际里程碑关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 里程碑描述
-     */
-    description?: string;
-    /**
-     * 里程碑名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 状态
-     */
-    state?: "OPEN" | "CLOSED";
-  } & {
     id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
   };
 }
-export interface GetMilestoneRequest {
+export interface DeleteProjectMemberRequest {
   projectId: string;
-  milestoneId: string;
-}
-export interface GetMilestoneResponse {
-  /**
-   * 里程碑
-   */
-  body: {
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 实际里程碑开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 实际里程碑关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 里程碑描述
-     */
-    description?: string;
-    /**
-     * 里程碑名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 状态
-     */
-    state?: "OPEN" | "CLOSED";
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  };
-}
-export interface UpdateMilestoneRequest {
-  projectId: string;
-  milestoneId: string;
-  /**
-   * 里程碑 Doc
-   */
-  body: {
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 实际里程碑开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 实际里程碑关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 里程碑描述
-     */
-    description?: string;
-    /**
-     * 里程碑名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 状态
-     */
-    state?: "OPEN" | "CLOSED";
-  };
-}
-export interface UpdateMilestoneResponse {
-  /**
-   * 里程碑
-   */
-  body: {
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 实际里程碑开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 实际里程碑关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 里程碑描述
-     */
-    description?: string;
-    /**
-     * 里程碑名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 状态
-     */
-    state?: "OPEN" | "CLOSED";
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  };
-}
-export interface DeleteMilestoneRequest {
-  projectId: string;
-  milestoneId: string;
+  memberId: string;
 }
 export interface ListTicketsRequest {
   query?: {
@@ -1575,7 +951,7 @@ export interface ListTicketsResponse {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   } & {
     id: string;
@@ -1716,7 +1092,7 @@ export interface GetTicketResponse {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   } & {
     id: string;
@@ -1863,7 +1239,7 @@ export interface MoveTicketResponse {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   } & {
     id: string;
@@ -1996,7 +1372,7 @@ export interface CreateTicketRequest {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   } & {
     /**
@@ -2130,7 +1506,7 @@ export interface CreateTicketResponse {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   } & {
     id: string;
@@ -2267,7 +1643,7 @@ export interface UpdateTicketRequest {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   };
 }
@@ -2396,7 +1772,7 @@ export interface UpdateTicketResponse {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   } & {
     id: string;
@@ -2548,7 +1924,7 @@ export interface TakeTicketResponse {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   } & {
     id: string;
@@ -2696,7 +2072,7 @@ export interface UndoTicketResponse {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   } & {
     id: string;
@@ -2844,7 +2220,7 @@ export interface DoneTicketResponse {
     /**
      * ticket risk
      */
-    risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
   } & {
     id: string;
@@ -2853,6 +2229,438 @@ export interface DoneTicketResponse {
     createAt?: Date;
     createBy?: string;
   };
+}
+export interface ListMilestonesRequest {
+  query?: {
+    _limit?: number;
+    _offset?: number;
+    _sort?: string;
+    _select?: string[];
+    project: string;
+  };
+}
+export interface ListMilestonesResponse {
+  body: ({
+    /**
+     * 关联的project
+     */
+    project?: string;
+  } & {
+    /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
+    /**
+     * 实际里程碑开始激活的时间
+     */
+    activeAt?: Date;
+    /**
+     * 实际里程碑关闭时间
+     */
+    closeAt?: Date;
+    /**
+     * 里程碑描述
+     */
+    description?: string;
+    /**
+     * 里程碑名称
+     */
+    name?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+    /**
+     * 状态
+     */
+    state?: "OPEN" | "CLOSED";
+  } & {
+    id: string;
+    updateAt?: Date;
+    updateBy?: string;
+    createAt?: Date;
+    createBy?: string;
+  })[];
+  headers: {
+    "x-total-count"?: number;
+  };
+}
+export interface CreateMilestoneRequest {
+  body: {
+    /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
+    /**
+     * 实际里程碑开始激活的时间
+     */
+    activeAt?: Date;
+    /**
+     * 实际里程碑关闭时间
+     */
+    closeAt?: Date;
+    /**
+     * 里程碑描述
+     */
+    description?: string;
+    /**
+     * 里程碑名称
+     */
+    name?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+    /**
+     * 状态
+     */
+    state?: "OPEN" | "CLOSED";
+  } & {
+    /**
+     * 里程碑名称
+     */
+    name: string;
+    /**
+     * 关联的project
+     */
+    project: string;
+  };
+}
+export interface CreateMilestoneResponse {
+  /**
+   * 里程碑
+   */
+  body: {
+    /**
+     * 关联的project
+     */
+    project?: string;
+  } & {
+    /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
+    /**
+     * 实际里程碑开始激活的时间
+     */
+    activeAt?: Date;
+    /**
+     * 实际里程碑关闭时间
+     */
+    closeAt?: Date;
+    /**
+     * 里程碑描述
+     */
+    description?: string;
+    /**
+     * 里程碑名称
+     */
+    name?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+    /**
+     * 状态
+     */
+    state?: "OPEN" | "CLOSED";
+  } & {
+    id: string;
+    updateAt?: Date;
+    updateBy?: string;
+    createAt?: Date;
+    createBy?: string;
+  };
+}
+export interface GetMilestoneRequest {
+  milestoneId: string;
+}
+export interface GetMilestoneResponse {
+  /**
+   * 里程碑
+   */
+  body: {
+    /**
+     * 关联的project
+     */
+    project?: string;
+  } & {
+    /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
+    /**
+     * 实际里程碑开始激活的时间
+     */
+    activeAt?: Date;
+    /**
+     * 实际里程碑关闭时间
+     */
+    closeAt?: Date;
+    /**
+     * 里程碑描述
+     */
+    description?: string;
+    /**
+     * 里程碑名称
+     */
+    name?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+    /**
+     * 状态
+     */
+    state?: "OPEN" | "CLOSED";
+  } & {
+    id: string;
+    updateAt?: Date;
+    updateBy?: string;
+    createAt?: Date;
+    createBy?: string;
+  };
+}
+export interface UpdateMilestoneRequest {
+  milestoneId: string;
+  /**
+   * 里程碑 Doc
+   */
+  body: {
+    /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
+    /**
+     * 实际里程碑开始激活的时间
+     */
+    activeAt?: Date;
+    /**
+     * 实际里程碑关闭时间
+     */
+    closeAt?: Date;
+    /**
+     * 里程碑描述
+     */
+    description?: string;
+    /**
+     * 里程碑名称
+     */
+    name?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+    /**
+     * 状态
+     */
+    state?: "OPEN" | "CLOSED";
+  };
+}
+export interface UpdateMilestoneResponse {
+  /**
+   * 里程碑
+   */
+  body: {
+    /**
+     * 关联的project
+     */
+    project?: string;
+  } & {
+    /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
+    /**
+     * 实际里程碑开始激活的时间
+     */
+    activeAt?: Date;
+    /**
+     * 实际里程碑关闭时间
+     */
+    closeAt?: Date;
+    /**
+     * 里程碑描述
+     */
+    description?: string;
+    /**
+     * 里程碑名称
+     */
+    name?: string;
+    refs?: {
+      /**
+       * 资源在第三方的 origin id
+       */
+      oid: string;
+      /**
+       * 来源
+       */
+      source: string;
+      /**
+       * 名称
+       */
+      name?: string;
+      /**
+       * 描述
+       */
+      description?: string;
+      /**
+       * 类型
+       */
+      type?: string;
+      /**
+       * 唯一地址
+       */
+      uri?: string;
+    }[];
+    /**
+     * 状态
+     */
+    state?: "OPEN" | "CLOSED";
+  } & {
+    id: string;
+    updateAt?: Date;
+    updateBy?: string;
+    createAt?: Date;
+    createBy?: string;
+  };
+}
+export interface DeleteMilestoneRequest {
+  milestoneId: string;
 }
 export interface ListRepositoriesRequest {
   query?: {
@@ -3218,6 +3026,27 @@ export interface UpdateRepositoryResponse {
 }
 export interface DeleteRepositoryRequest {
   repositoryId: string;
+}
+export interface AddRepositoryCollaboratorRequest {
+  repositoryId: string;
+  body: {
+    /**
+     * collaborator
+     */
+    id: string;
+  };
+}
+export interface AddRepositoryCollaboratorResponse {
+  body: {
+    /**
+     * collaborator
+     */
+    id: string;
+  };
+}
+export interface DeleteRepositoryCollaboratorRequest {
+  repositoryId: string;
+  collaboratorId: string;
 }
 export interface ListLanesRequest {
   query?: {
@@ -3655,9 +3484,9 @@ export interface GetTicketsStatisticsResponse {
      */
     count?: number;
     /**
-     * 任务风险
+     * ticket risk
      */
-    risk?: string;
+    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   }[];
 }
 export type DateTime = Date;
@@ -3673,7 +3502,7 @@ export type State = "OPEN" | "CLOSED";
 /**
  * ticket risk
  */
-export type TicketRisk = "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+export type TicketRisk = "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
 
 export type TicketStatisticGroup =
   | "id"
@@ -3753,7 +3582,7 @@ export interface ProjectDoc {
   /**
    * 协作者
    */
-  collaborators?: string[];
+  members?: string[];
   /**
    * 标签
    */
@@ -3778,71 +3607,6 @@ export interface ProjectDoc {
    * 项目管理人员 userid
    */
   pm?: string[];
-  /**
-   * 项目的里程碑
-   */
-  milestones?: ({
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 实际里程碑开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 实际里程碑关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 里程碑描述
-     */
-    description?: string;
-    /**
-     * 里程碑名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 状态
-     */
-    state?: "OPEN" | "CLOSED";
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  })[];
   refs?: {
     /**
      * 资源在第三方的 origin id
@@ -3907,7 +3671,7 @@ export type ProjectCreateDoc = {
   /**
    * 协作者
    */
-  collaborators?: string[];
+  members?: string[];
   /**
    * 标签
    */
@@ -3932,71 +3696,6 @@ export type ProjectCreateDoc = {
    * 项目管理人员 userid
    */
   pm?: string[];
-  /**
-   * 项目的里程碑
-   */
-  milestones?: ({
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 实际里程碑开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 实际里程碑关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 里程碑描述
-     */
-    description?: string;
-    /**
-     * 里程碑名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 状态
-     */
-    state?: "OPEN" | "CLOSED";
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  })[];
   refs?: {
     /**
      * 资源在第三方的 origin id
@@ -4073,7 +3772,7 @@ export type Project = {
   /**
    * 协作者
    */
-  collaborators?: string[];
+  members?: string[];
   /**
    * 标签
    */
@@ -4098,71 +3797,6 @@ export type Project = {
    * 项目管理人员 userid
    */
   pm?: string[];
-  /**
-   * 项目的里程碑
-   */
-  milestones?: ({
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 实际里程碑开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 实际里程碑关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 里程碑描述
-     */
-    description?: string;
-    /**
-     * 里程碑名称
-     */
-    name?: string;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 状态
-     */
-    state?: "OPEN" | "CLOSED";
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  })[];
   refs?: {
     /**
      * 资源在第三方的 origin id
@@ -4493,12 +4127,21 @@ export type MilestoneCreateDoc = {
    * 里程碑名称
    */
   name: string;
+  /**
+   * 关联的project
+   */
+  project: string;
 };
 
 /**
  * 里程碑
  */
 export type Milestone = {
+  /**
+   * 关联的project
+   */
+  project?: string;
+} & {
   /**
    * 计划开始时间
    */
@@ -4804,9 +4447,9 @@ export interface TicketStats {
    */
   count?: number;
   /**
-   * 任务风险
+   * ticket risk
    */
-  risk?: string;
+  risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
 }
 
 /**
@@ -4933,7 +4576,7 @@ export interface TicketDoc {
   /**
    * ticket risk
    */
-  risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+  risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   shiftAt?: Date;
 }
 
@@ -5058,7 +4701,7 @@ export type TicketCreateDoc = {
   /**
    * ticket risk
    */
-  risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+  risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   shiftAt?: Date;
 } & {
   /**
@@ -5191,7 +4834,7 @@ export type Ticket = {
   /**
    * ticket risk
    */
-  risk?: "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+  risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   shiftAt?: Date;
 } & {
   id: string;
@@ -5200,6 +4843,20 @@ export type Ticket = {
   createAt?: Date;
   createBy?: string;
 };
+
+export interface CollaboratorDoc {
+  /**
+   * collaborator
+   */
+  id: string;
+}
+
+export interface MemberDoc {
+  /**
+   * member
+   */
+  id: string;
+}
 
 export interface MongoDefault {
   id: string;
