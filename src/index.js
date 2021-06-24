@@ -178,6 +178,23 @@ export default class SDK {
       });
     },
     /**
+     * Create a ticket
+     *
+     * @param {CreateTicketRequest} req createTicket request
+     * @returns {Promise<CreateTicketResponse>} The ticket created
+     */
+    createTicket: req => {
+      const { body } = req || {};
+
+      if (!body) throw new Error("requetBody is required for createTicket");
+
+      return fetch(`${this.base}/tickets`, {
+        method: "POST",
+        body,
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
      * Find ticket by id
      *
      * @param {GetTicketRequest} req getTicket request
@@ -194,55 +211,18 @@ export default class SDK {
       });
     },
     /**
-     * move ticket to another lane
-     *
-     * @param {MoveTicketRequest} req moveTicket request
-     * @returns {Promise<MoveTicketResponse>} The updated ticket
-     */
-    moveTicket: req => {
-      const { ticketId, body } = req || {};
-
-      if (!ticketId) throw new Error("ticketId is required for moveTicket");
-      if (!body) throw new Error("requetBody is required for moveTicket");
-
-      return fetch(`${this.base}/tickets/${ticketId}/!move`, {
-        method: "POST",
-        body,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Create a ticket
-     *
-     * @param {CreateTicketRequest} req createTicket request
-     * @returns {Promise<CreateTicketResponse>} The ticket created
-     */
-    createTicket: req => {
-      const { projectId, body } = req || {};
-
-      if (!projectId) throw new Error("projectId is required for createTicket");
-      if (!body) throw new Error("requetBody is required for createTicket");
-
-      return fetch(`${this.base}/projects/${projectId}/tickets`, {
-        method: "POST",
-        body,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
      * Update ticket
      *
      * @param {UpdateTicketRequest} req updateTicket request
      * @returns {Promise<UpdateTicketResponse>} The updated ticket
      */
     updateTicket: req => {
-      const { projectId, ticketId, body } = req || {};
+      const { ticketId, body } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for updateTicket");
       if (!ticketId) throw new Error("ticketId is required for updateTicket");
       if (!body) throw new Error("requetBody is required for updateTicket");
 
-      return fetch(`${this.base}/projects/${projectId}/tickets/${ticketId}`, {
+      return fetch(`${this.base}/tickets/${ticketId}`, {
         method: "PUT",
         body,
         headers: { Authorization: this.auth },
@@ -259,76 +239,30 @@ export default class SDK {
       if (!projectId) throw new Error("projectId is required for deleteTicket");
       if (!ticketId) throw new Error("ticketId is required for deleteTicket");
 
-      return fetch(`${this.base}/projects/${projectId}/tickets/${ticketId}`, {
+      return fetch(`${this.base}/tickets/${ticketId}`, {
         method: "DELETE",
         headers: { Authorization: this.auth },
       });
     },
     /**
-     * candidate take ticket
+     * create an action to drive ticket in the flows
      *
-     * @param {TakeTicketRequest} req takeTicket request
-     * @returns {Promise<TakeTicketResponse>} The updated ticket
+     * @param {CreateTicketActionRequest} req createTicketAction request
+     * @returns {Promise<CreateTicketActionResponse>} The updated ticket
      */
-    takeTicket: req => {
-      const { projectId, ticketId, body } = req || {};
+    createTicketAction: req => {
+      const { ticketId, body } = req || {};
 
-      if (!projectId) throw new Error("projectId is required for takeTicket");
-      if (!ticketId) throw new Error("ticketId is required for takeTicket");
-      if (!body) throw new Error("requetBody is required for takeTicket");
+      if (!ticketId)
+        throw new Error("ticketId is required for createTicketAction");
+      if (!body)
+        throw new Error("requetBody is required for createTicketAction");
 
-      return fetch(
-        `${this.base}/projects/${projectId}/tickets/${ticketId}/!take`,
-        {
-          method: "POST",
-          body,
-          headers: { Authorization: this.auth },
-        }
-      );
-    },
-    /**
-     * candidate undo ticket
-     *
-     * @param {UndoTicketRequest} req undoTicket request
-     * @returns {Promise<UndoTicketResponse>} The updated ticket
-     */
-    undoTicket: req => {
-      const { projectId, ticketId, body } = req || {};
-
-      if (!projectId) throw new Error("projectId is required for undoTicket");
-      if (!ticketId) throw new Error("ticketId is required for undoTicket");
-      if (!body) throw new Error("requetBody is required for undoTicket");
-
-      return fetch(
-        `${this.base}/projects/${projectId}/tickets/${ticketId}/!undo`,
-        {
-          method: "POST",
-          body,
-          headers: { Authorization: this.auth },
-        }
-      );
-    },
-    /**
-     * candidate done ticket
-     *
-     * @param {DoneTicketRequest} req doneTicket request
-     * @returns {Promise<DoneTicketResponse>} The updated ticket
-     */
-    doneTicket: req => {
-      const { projectId, ticketId, body } = req || {};
-
-      if (!projectId) throw new Error("projectId is required for doneTicket");
-      if (!ticketId) throw new Error("ticketId is required for doneTicket");
-      if (!body) throw new Error("requetBody is required for doneTicket");
-
-      return fetch(
-        `${this.base}/projects/${projectId}/tickets/${ticketId}/!done`,
-        {
-          method: "POST",
-          body,
-          headers: { Authorization: this.auth },
-        }
-      );
+      return fetch(`${this.base}/tickets/${ticketId}/actions`, {
+        method: "POST",
+        body,
+        headers: { Authorization: this.auth },
+      });
     },
   };
   /**
@@ -423,223 +357,22 @@ export default class SDK {
     },
   };
   /**
-   * repository's methods
+   * board's methods
    */
-  repository = {
+  board = {
     /**
-     * List all repositories
+     * get a board
      *
-     * @param {ListRepositoriesRequest} req listRepositories request
-     * @returns {Promise<ListRepositoriesResponse>} A paged array of repositories
+     * @param {GetBoardRequest} req getBoard request
+     * @returns {Promise<GetBoardResponse>} Get a board
      */
-    listRepositories: req => {
-      const { query } = req || {};
+    getBoard: req => {
+      const { boardId } = req || {};
 
-      return fetch(`${this.base}/repositories`, {
+      if (!boardId) throw new Error("boardId is required for getBoard");
+
+      return fetch(`${this.base}/board/${boardId}`, {
         method: "GET",
-        query,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Create a repository
-     *
-     * @param {CreateRepositoryRequest} req createRepository request
-     * @returns {Promise<CreateRepositoryResponse>} The repository created
-     */
-    createRepository: req => {
-      const { body } = req || {};
-
-      if (!body) throw new Error("requetBody is required for createRepository");
-
-      return fetch(`${this.base}/repositories`, {
-        method: "POST",
-        body,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Find repository by id
-     *
-     * @param {GetRepositoryRequest} req getRepository request
-     * @returns {Promise<GetRepositoryResponse>} Expected response to a valid request
-     */
-    getRepository: req => {
-      const { repositoryId } = req || {};
-
-      if (!repositoryId)
-        throw new Error("repositoryId is required for getRepository");
-
-      return fetch(`${this.base}/repositories/${repositoryId}`, {
-        method: "GET",
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Update repository
-     *
-     * @param {UpdateRepositoryRequest} req updateRepository request
-     * @returns {Promise<UpdateRepositoryResponse>} The repository
-     */
-    updateRepository: req => {
-      const { repositoryId, body } = req || {};
-
-      if (!repositoryId)
-        throw new Error("repositoryId is required for updateRepository");
-      if (!body) throw new Error("requetBody is required for updateRepository");
-
-      return fetch(`${this.base}/repositories/${repositoryId}`, {
-        method: "PUT",
-        body,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Delete repository
-     *
-     * @param {DeleteRepositoryRequest} req deleteRepository request
-     */
-    deleteRepository: req => {
-      const { repositoryId } = req || {};
-
-      if (!repositoryId)
-        throw new Error("repositoryId is required for deleteRepository");
-
-      return fetch(`${this.base}/repositories/${repositoryId}`, {
-        method: "DELETE",
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * add collaborator for repository
-     *
-     * @param {AddRepositoryCollaboratorRequest} req addRepositoryCollaborator request
-     * @returns {Promise<AddRepositoryCollaboratorResponse>} The User
-     */
-    addRepositoryCollaborator: req => {
-      const { repositoryId, body } = req || {};
-
-      if (!repositoryId)
-        throw new Error(
-          "repositoryId is required for addRepositoryCollaborator"
-        );
-      if (!body)
-        throw new Error("requetBody is required for addRepositoryCollaborator");
-
-      return fetch(`${this.base}/repositories/${repositoryId}/collaborators`, {
-        method: "POST",
-        body,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * remove collaborator for repository
-     *
-     * @param {DeleteRepositoryCollaboratorRequest} req deleteRepositoryCollaborator request
-     */
-    deleteRepositoryCollaborator: req => {
-      const { repositoryId, collaboratorId } = req || {};
-
-      if (!repositoryId)
-        throw new Error(
-          "repositoryId is required for deleteRepositoryCollaborator"
-        );
-      if (!collaboratorId)
-        throw new Error(
-          "collaboratorId is required for deleteRepositoryCollaborator"
-        );
-
-      return fetch(
-        `${this.base}/repositories/${repositoryId}/collaborators/${collaboratorId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: this.auth },
-        }
-      );
-    },
-  };
-  /**
-   * lane's methods
-   */
-  lane = {
-    /**
-     * List all lanes
-     *
-     * @param {ListLanesRequest} req listLanes request
-     * @returns {Promise<ListLanesResponse>} A paged array of lanes
-     */
-    listLanes: req => {
-      const { query } = req || {};
-
-      return fetch(`${this.base}/lanes`, {
-        method: "GET",
-        query,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Create a lane
-     *
-     * @param {CreateLaneRequest} req createLane request
-     * @returns {Promise<CreateLaneResponse>} The lane created
-     */
-    createLane: req => {
-      const { body } = req || {};
-
-      if (!body) throw new Error("requetBody is required for createLane");
-
-      return fetch(`${this.base}/lanes`, {
-        method: "POST",
-        body,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Find lane by id
-     *
-     * @param {GetLaneRequest} req getLane request
-     * @returns {Promise<GetLaneResponse>} Expected response to a valid request
-     */
-    getLane: req => {
-      const { laneId } = req || {};
-
-      if (!laneId) throw new Error("laneId is required for getLane");
-
-      return fetch(`${this.base}/lanes/${laneId}`, {
-        method: "GET",
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Update lane
-     *
-     * @param {UpdateLaneRequest} req updateLane request
-     * @returns {Promise<UpdateLaneResponse>} The lane
-     */
-    updateLane: req => {
-      const { laneId, body } = req || {};
-
-      if (!laneId) throw new Error("laneId is required for updateLane");
-      if (!body) throw new Error("requetBody is required for updateLane");
-
-      return fetch(`${this.base}/lanes/${laneId}`, {
-        method: "PUT",
-        body,
-        headers: { Authorization: this.auth },
-      });
-    },
-    /**
-     * Delete lane
-     *
-     * @param {DeleteLaneRequest} req deleteLane request
-     */
-    deleteLane: req => {
-      const { laneId } = req || {};
-
-      if (!laneId) throw new Error("laneId is required for deleteLane");
-
-      return fetch(`${this.base}/lanes/${laneId}`, {
-        method: "DELETE",
         headers: { Authorization: this.auth },
       });
     },
