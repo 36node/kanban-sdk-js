@@ -7,6 +7,7 @@ declare class SDK {
 
   project: ProjectAPI;
   ticket: TicketAPI;
+  action: ActionAPI;
   milestone: MilestoneAPI;
   board: BoardAPI;
   statistics: StatisticsAPI;
@@ -68,10 +69,16 @@ export interface TicketAPI {
    * Delete ticket
    */
   deleteTicket(req: DeleteTicketRequest): Promise<void>;
+}
+export interface ActionAPI {
+  /**
+   * List all actions
+   */
+  listActions(req: ListActionsRequest): Promise<ListActionsResponse>;
   /**
    * create an action to drive ticket in the flows
    */
-  createTicketAction(req: CreateTicketActionRequest): Promise<CreateTicketActionResponse>;
+  createAction(req: CreateActionRequest): Promise<CreateActionResponse>;
 }
 export interface MilestoneAPI {
   /**
@@ -953,330 +960,6 @@ export interface ListTicketsResponse {
      */
     title: string;
     /**
-     * 所属看板
-     */
-    board: {
-      /**
-       * 看板描述
-       */
-      description?: string;
-      /**
-       * 看板名称
-       */
-      name?: string;
-      fields?: {
-        /**
-         * 表单字段描述
-         */
-        description?: string;
-        /**
-         * 是否是额外自定义的字段
-         */
-        isCustom?: boolean;
-        /**
-         * 是否是必须的字段
-         */
-        isRequired?: boolean;
-        /**
-         * 表单字段key
-         */
-        key: string;
-        /**
-         * 表单字段名称
-         */
-        name: string;
-        /**
-         * 表单字段类型
-         */
-        type: string;
-        /**
-         * 表单字段的值
-         */
-        value?: string;
-      }[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 看板名称
-       */
-      name: string;
-      flows?: ({
-        /**
-         * 工作流描述
-         */
-        description?: string;
-        /**
-         * 工作流名称
-         */
-        name?: string;
-        /**
-         * 限制工作流允许操作的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 工作流名称
-         */
-        name: string;
-        fields?: ({
-          /**
-           * 表单字段描述
-           */
-          description?: string;
-          /**
-           * 是否是额外自定义的字段
-           */
-          isCustom?: boolean;
-          /**
-           * 是否是必须的字段
-           */
-          isRequired?: boolean;
-          /**
-           * 表单字段key
-           */
-          key: string;
-          /**
-           * 表单字段名称
-           */
-          name: string;
-          /**
-           * 表单字段类型
-           */
-          type: string;
-          /**
-           * 表单字段的值
-           */
-          value?: string;
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        })[];
-        /**
-         * 来源泳道
-         */
-        from: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-        /**
-         * 目标泳道
-         */
-        to: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-      })[];
-      lanes?: ({
-        /**
-         * 泳道automations
-         */
-        automations?: string[];
-        /**
-         * 泳道描述
-         */
-        description?: string;
-        /**
-         * 泳道名称
-         */
-        name?: string;
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 必须填写的字段
-         */
-        requires?: string[];
-        /**
-         * 限制将卡片拖动到该泳道的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 泳道名称
-         */
-        name: string;
-      })[];
-    };
-    /**
      * 当前工单对应的可操作流程
      */
     flows?: ({
@@ -1315,7 +998,7 @@ export interface ListTicketsResponse {
         /**
          * 是否是必须的字段
          */
-        isRequired?: boolean;
+        required?: boolean;
         /**
          * 表单字段key
          */
@@ -1531,14 +1214,6 @@ export interface ListTicketsResponse {
      */
     milestone?: {
       /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
        * 实际里程碑开始激活的时间
        */
       activeAt?: Date;
@@ -1550,6 +1225,10 @@ export interface ListTicketsResponse {
        * 里程碑描述
        */
       description?: string;
+      /**
+       * 计划结束时间
+       */
+      endAt?: Date;
       /**
        * 里程碑名称
        */
@@ -1581,123 +1260,13 @@ export interface ListTicketsResponse {
         uri?: string;
       }[];
       /**
+       * 计划开始时间
+       */
+      startAt?: Date;
+      /**
        * 状态
        */
       state?: "OPEN" | "CLOSED";
-      /**
-       * 关联的project
-       */
-      project?: {
-        /**
-         * 项目实际开始激活的时间
-         */
-        activeAt?: Date;
-        /**
-         * 项目实际关闭时间
-         */
-        closeAt?: Date;
-        /**
-         * 项目描述
-         */
-        description?: string;
-        /**
-         * 计划结束时间
-         */
-        endAt?: Date;
-        /**
-         * 行业
-         */
-        industry?: string;
-        /**
-         * 标签
-         */
-        labels?: string[];
-        /**
-         * 项目logo
-         */
-        logo?: string;
-        /**
-         * 协作者
-         */
-        members?: string[];
-        /**
-         * 项目名称
-         */
-        name?: string;
-        /**
-         * 所属命名空间
-         */
-        ns?: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner?: string;
-        /**
-         * 项目管理人员 userid
-         */
-        pm?: string[];
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 项目阶段
-         */
-        stage?: string;
-        /**
-         * 计划开始时间
-         */
-        startAt?: Date;
-        /**
-         * 项目状态
-         */
-        state?: "OPEN" | "CLOSED";
-        /**
-         * 文档摘要，可以用于简介或者目录
-         */
-        summary?: string;
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 项目名称
-         */
-        name: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner: string;
-        /**
-         * 项目状态
-         */
-        state: "OPEN" | "CLOSED";
-      };
     } & {
       id: string;
       updateAt?: Date;
@@ -2208,330 +1777,6 @@ export interface CreateTicketResponse {
      */
     title: string;
     /**
-     * 所属看板
-     */
-    board: {
-      /**
-       * 看板描述
-       */
-      description?: string;
-      /**
-       * 看板名称
-       */
-      name?: string;
-      fields?: {
-        /**
-         * 表单字段描述
-         */
-        description?: string;
-        /**
-         * 是否是额外自定义的字段
-         */
-        isCustom?: boolean;
-        /**
-         * 是否是必须的字段
-         */
-        isRequired?: boolean;
-        /**
-         * 表单字段key
-         */
-        key: string;
-        /**
-         * 表单字段名称
-         */
-        name: string;
-        /**
-         * 表单字段类型
-         */
-        type: string;
-        /**
-         * 表单字段的值
-         */
-        value?: string;
-      }[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 看板名称
-       */
-      name: string;
-      flows?: ({
-        /**
-         * 工作流描述
-         */
-        description?: string;
-        /**
-         * 工作流名称
-         */
-        name?: string;
-        /**
-         * 限制工作流允许操作的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 工作流名称
-         */
-        name: string;
-        fields?: ({
-          /**
-           * 表单字段描述
-           */
-          description?: string;
-          /**
-           * 是否是额外自定义的字段
-           */
-          isCustom?: boolean;
-          /**
-           * 是否是必须的字段
-           */
-          isRequired?: boolean;
-          /**
-           * 表单字段key
-           */
-          key: string;
-          /**
-           * 表单字段名称
-           */
-          name: string;
-          /**
-           * 表单字段类型
-           */
-          type: string;
-          /**
-           * 表单字段的值
-           */
-          value?: string;
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        })[];
-        /**
-         * 来源泳道
-         */
-        from: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-        /**
-         * 目标泳道
-         */
-        to: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-      })[];
-      lanes?: ({
-        /**
-         * 泳道automations
-         */
-        automations?: string[];
-        /**
-         * 泳道描述
-         */
-        description?: string;
-        /**
-         * 泳道名称
-         */
-        name?: string;
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 必须填写的字段
-         */
-        requires?: string[];
-        /**
-         * 限制将卡片拖动到该泳道的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 泳道名称
-         */
-        name: string;
-      })[];
-    };
-    /**
      * 当前工单对应的可操作流程
      */
     flows?: ({
@@ -2570,7 +1815,7 @@ export interface CreateTicketResponse {
         /**
          * 是否是必须的字段
          */
-        isRequired?: boolean;
+        required?: boolean;
         /**
          * 表单字段key
          */
@@ -2786,14 +2031,6 @@ export interface CreateTicketResponse {
      */
     milestone?: {
       /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
        * 实际里程碑开始激活的时间
        */
       activeAt?: Date;
@@ -2805,6 +2042,10 @@ export interface CreateTicketResponse {
        * 里程碑描述
        */
       description?: string;
+      /**
+       * 计划结束时间
+       */
+      endAt?: Date;
       /**
        * 里程碑名称
        */
@@ -2836,123 +2077,13 @@ export interface CreateTicketResponse {
         uri?: string;
       }[];
       /**
+       * 计划开始时间
+       */
+      startAt?: Date;
+      /**
        * 状态
        */
       state?: "OPEN" | "CLOSED";
-      /**
-       * 关联的project
-       */
-      project?: {
-        /**
-         * 项目实际开始激活的时间
-         */
-        activeAt?: Date;
-        /**
-         * 项目实际关闭时间
-         */
-        closeAt?: Date;
-        /**
-         * 项目描述
-         */
-        description?: string;
-        /**
-         * 计划结束时间
-         */
-        endAt?: Date;
-        /**
-         * 行业
-         */
-        industry?: string;
-        /**
-         * 标签
-         */
-        labels?: string[];
-        /**
-         * 项目logo
-         */
-        logo?: string;
-        /**
-         * 协作者
-         */
-        members?: string[];
-        /**
-         * 项目名称
-         */
-        name?: string;
-        /**
-         * 所属命名空间
-         */
-        ns?: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner?: string;
-        /**
-         * 项目管理人员 userid
-         */
-        pm?: string[];
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 项目阶段
-         */
-        stage?: string;
-        /**
-         * 计划开始时间
-         */
-        startAt?: Date;
-        /**
-         * 项目状态
-         */
-        state?: "OPEN" | "CLOSED";
-        /**
-         * 文档摘要，可以用于简介或者目录
-         */
-        summary?: string;
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 项目名称
-         */
-        name: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner: string;
-        /**
-         * 项目状态
-         */
-        state: "OPEN" | "CLOSED";
-      };
     } & {
       id: string;
       updateAt?: Date;
@@ -3327,330 +2458,6 @@ export interface GetTicketResponse {
      */
     title: string;
     /**
-     * 所属看板
-     */
-    board: {
-      /**
-       * 看板描述
-       */
-      description?: string;
-      /**
-       * 看板名称
-       */
-      name?: string;
-      fields?: {
-        /**
-         * 表单字段描述
-         */
-        description?: string;
-        /**
-         * 是否是额外自定义的字段
-         */
-        isCustom?: boolean;
-        /**
-         * 是否是必须的字段
-         */
-        isRequired?: boolean;
-        /**
-         * 表单字段key
-         */
-        key: string;
-        /**
-         * 表单字段名称
-         */
-        name: string;
-        /**
-         * 表单字段类型
-         */
-        type: string;
-        /**
-         * 表单字段的值
-         */
-        value?: string;
-      }[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 看板名称
-       */
-      name: string;
-      flows?: ({
-        /**
-         * 工作流描述
-         */
-        description?: string;
-        /**
-         * 工作流名称
-         */
-        name?: string;
-        /**
-         * 限制工作流允许操作的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 工作流名称
-         */
-        name: string;
-        fields?: ({
-          /**
-           * 表单字段描述
-           */
-          description?: string;
-          /**
-           * 是否是额外自定义的字段
-           */
-          isCustom?: boolean;
-          /**
-           * 是否是必须的字段
-           */
-          isRequired?: boolean;
-          /**
-           * 表单字段key
-           */
-          key: string;
-          /**
-           * 表单字段名称
-           */
-          name: string;
-          /**
-           * 表单字段类型
-           */
-          type: string;
-          /**
-           * 表单字段的值
-           */
-          value?: string;
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        })[];
-        /**
-         * 来源泳道
-         */
-        from: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-        /**
-         * 目标泳道
-         */
-        to: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-      })[];
-      lanes?: ({
-        /**
-         * 泳道automations
-         */
-        automations?: string[];
-        /**
-         * 泳道描述
-         */
-        description?: string;
-        /**
-         * 泳道名称
-         */
-        name?: string;
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 必须填写的字段
-         */
-        requires?: string[];
-        /**
-         * 限制将卡片拖动到该泳道的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 泳道名称
-         */
-        name: string;
-      })[];
-    };
-    /**
      * 当前工单对应的可操作流程
      */
     flows?: ({
@@ -3689,7 +2496,7 @@ export interface GetTicketResponse {
         /**
          * 是否是必须的字段
          */
-        isRequired?: boolean;
+        required?: boolean;
         /**
          * 表单字段key
          */
@@ -3905,14 +2712,6 @@ export interface GetTicketResponse {
      */
     milestone?: {
       /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
        * 实际里程碑开始激活的时间
        */
       activeAt?: Date;
@@ -3924,6 +2723,10 @@ export interface GetTicketResponse {
        * 里程碑描述
        */
       description?: string;
+      /**
+       * 计划结束时间
+       */
+      endAt?: Date;
       /**
        * 里程碑名称
        */
@@ -3955,123 +2758,13 @@ export interface GetTicketResponse {
         uri?: string;
       }[];
       /**
+       * 计划开始时间
+       */
+      startAt?: Date;
+      /**
        * 状态
        */
       state?: "OPEN" | "CLOSED";
-      /**
-       * 关联的project
-       */
-      project?: {
-        /**
-         * 项目实际开始激活的时间
-         */
-        activeAt?: Date;
-        /**
-         * 项目实际关闭时间
-         */
-        closeAt?: Date;
-        /**
-         * 项目描述
-         */
-        description?: string;
-        /**
-         * 计划结束时间
-         */
-        endAt?: Date;
-        /**
-         * 行业
-         */
-        industry?: string;
-        /**
-         * 标签
-         */
-        labels?: string[];
-        /**
-         * 项目logo
-         */
-        logo?: string;
-        /**
-         * 协作者
-         */
-        members?: string[];
-        /**
-         * 项目名称
-         */
-        name?: string;
-        /**
-         * 所属命名空间
-         */
-        ns?: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner?: string;
-        /**
-         * 项目管理人员 userid
-         */
-        pm?: string[];
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 项目阶段
-         */
-        stage?: string;
-        /**
-         * 计划开始时间
-         */
-        startAt?: Date;
-        /**
-         * 项目状态
-         */
-        state?: "OPEN" | "CLOSED";
-        /**
-         * 文档摘要，可以用于简介或者目录
-         */
-        summary?: string;
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 项目名称
-         */
-        name: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner: string;
-        /**
-         * 项目状态
-         */
-        state: "OPEN" | "CLOSED";
-      };
     } & {
       id: string;
       updateAt?: Date;
@@ -4580,330 +3273,6 @@ export interface UpdateTicketResponse {
      */
     title: string;
     /**
-     * 所属看板
-     */
-    board: {
-      /**
-       * 看板描述
-       */
-      description?: string;
-      /**
-       * 看板名称
-       */
-      name?: string;
-      fields?: {
-        /**
-         * 表单字段描述
-         */
-        description?: string;
-        /**
-         * 是否是额外自定义的字段
-         */
-        isCustom?: boolean;
-        /**
-         * 是否是必须的字段
-         */
-        isRequired?: boolean;
-        /**
-         * 表单字段key
-         */
-        key: string;
-        /**
-         * 表单字段名称
-         */
-        name: string;
-        /**
-         * 表单字段类型
-         */
-        type: string;
-        /**
-         * 表单字段的值
-         */
-        value?: string;
-      }[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 看板名称
-       */
-      name: string;
-      flows?: ({
-        /**
-         * 工作流描述
-         */
-        description?: string;
-        /**
-         * 工作流名称
-         */
-        name?: string;
-        /**
-         * 限制工作流允许操作的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 工作流名称
-         */
-        name: string;
-        fields?: ({
-          /**
-           * 表单字段描述
-           */
-          description?: string;
-          /**
-           * 是否是额外自定义的字段
-           */
-          isCustom?: boolean;
-          /**
-           * 是否是必须的字段
-           */
-          isRequired?: boolean;
-          /**
-           * 表单字段key
-           */
-          key: string;
-          /**
-           * 表单字段名称
-           */
-          name: string;
-          /**
-           * 表单字段类型
-           */
-          type: string;
-          /**
-           * 表单字段的值
-           */
-          value?: string;
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        })[];
-        /**
-         * 来源泳道
-         */
-        from: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-        /**
-         * 目标泳道
-         */
-        to: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-      })[];
-      lanes?: ({
-        /**
-         * 泳道automations
-         */
-        automations?: string[];
-        /**
-         * 泳道描述
-         */
-        description?: string;
-        /**
-         * 泳道名称
-         */
-        name?: string;
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 必须填写的字段
-         */
-        requires?: string[];
-        /**
-         * 限制将卡片拖动到该泳道的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 泳道名称
-         */
-        name: string;
-      })[];
-    };
-    /**
      * 当前工单对应的可操作流程
      */
     flows?: ({
@@ -4942,7 +3311,7 @@ export interface UpdateTicketResponse {
         /**
          * 是否是必须的字段
          */
-        isRequired?: boolean;
+        required?: boolean;
         /**
          * 表单字段key
          */
@@ -5158,14 +3527,6 @@ export interface UpdateTicketResponse {
      */
     milestone?: {
       /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
        * 实际里程碑开始激活的时间
        */
       activeAt?: Date;
@@ -5177,6 +3538,10 @@ export interface UpdateTicketResponse {
        * 里程碑描述
        */
       description?: string;
+      /**
+       * 计划结束时间
+       */
+      endAt?: Date;
       /**
        * 里程碑名称
        */
@@ -5208,123 +3573,13 @@ export interface UpdateTicketResponse {
         uri?: string;
       }[];
       /**
+       * 计划开始时间
+       */
+      startAt?: Date;
+      /**
        * 状态
        */
       state?: "OPEN" | "CLOSED";
-      /**
-       * 关联的project
-       */
-      project?: {
-        /**
-         * 项目实际开始激活的时间
-         */
-        activeAt?: Date;
-        /**
-         * 项目实际关闭时间
-         */
-        closeAt?: Date;
-        /**
-         * 项目描述
-         */
-        description?: string;
-        /**
-         * 计划结束时间
-         */
-        endAt?: Date;
-        /**
-         * 行业
-         */
-        industry?: string;
-        /**
-         * 标签
-         */
-        labels?: string[];
-        /**
-         * 项目logo
-         */
-        logo?: string;
-        /**
-         * 协作者
-         */
-        members?: string[];
-        /**
-         * 项目名称
-         */
-        name?: string;
-        /**
-         * 所属命名空间
-         */
-        ns?: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner?: string;
-        /**
-         * 项目管理人员 userid
-         */
-        pm?: string[];
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 项目阶段
-         */
-        stage?: string;
-        /**
-         * 计划开始时间
-         */
-        startAt?: Date;
-        /**
-         * 项目状态
-         */
-        state?: "OPEN" | "CLOSED";
-        /**
-         * 文档摘要，可以用于简介或者目录
-         */
-        summary?: string;
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 项目名称
-         */
-        name: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner: string;
-        /**
-         * 项目状态
-         */
-        state: "OPEN" | "CLOSED";
-      };
     } & {
       id: string;
       updateAt?: Date;
@@ -5576,169 +3831,34 @@ export interface DeleteTicketRequest {
   projectId: string;
   ticketId: string;
 }
-export interface CreateTicketActionRequest {
-  ticketId: string;
-  /**
-   * 任务创建文档
-   */
-  body: {
+export interface ListActionsRequest {
+  query?: {
+    board?: string;
+    createBy?: string[];
+    _limit?: number;
+    _offset?: number;
+    project?: string[];
+    _select?: string[];
+    _sort?: string;
+    ticket?: string;
+  };
+}
+export interface ListActionsResponse {
+  body: ({
     /**
-     * 任务描述
+     * 任务备注
      */
-    description?: string;
+    remark?: string;
     /**
      * 任务名称
      */
     name?: string;
-    /**
-     * 对应看板 ID
-     */
-    board?: string;
-    /**
-     * 对应工作流 ID
-     */
-    flow?: string;
     /**
      * 上传的数据
      */
     payload?: {
       [k: string]: any;
     };
-    /**
-     * 对应工单 ID
-     */
-    ticket?: string;
-  } & {
-    /**
-     * 任务名称
-     */
-    name: string;
-    /**
-     * 对应看板 ID
-     */
-    board: string;
-    /**
-     * 对应工作流 ID
-     */
-    flow: string;
-    /**
-     * 对应工单 ID
-     */
-    ticket: string;
-  };
-}
-export interface CreateTicketActionResponse {
-  /**
-   * 工单
-   */
-  body: {
-    /**
-     * 额外奖励
-     */
-    bonus?: number;
-    /**
-     * 赏金
-     */
-    bounty?: number;
-    /**
-     * 关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * ticket 的内容
-     */
-    content?: string;
-    /**
-     * 第三方数据
-     */
-    data?: {
-      [k: string]: any;
-    };
-    /**
-     * 截止时间
-     */
-    deadline?: Date;
-    labels?: string[];
-    level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-    /**
-     * 所属命名空间
-     */
-    ns?: string;
-    /**
-     * 父级卡片
-     */
-    parent?: string;
-    priority?: 0 | 1 | 2;
-    /**
-     * 发布时间
-     */
-    publishAt?: Date;
-    /**
-     * 发布人 (userId)
-     */
-    publishBy?: string | null;
-    /**
-     * 是否被发布
-     */
-    published?: boolean;
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 备注
-     */
-    remark?: string;
-    /**
-     * 是否 reopened 过
-     */
-    reopen?: boolean;
-    reopenAt?: Date;
-    reopenBy?: string;
-    /**
-     * ticket risk
-     */
-    risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
-    shiftAt?: Date;
-    state?: "OPEN" | "CLOSED";
-    /**
-     * 领取时间
-     */
-    takeAt?: Date;
-    /**
-     * 领取人 (userId)
-     */
-    takeBy?: string | null;
-    /**
-     * ticket 的标题
-     */
-    title?: string;
-    /**
-     * ticket 的类别
-     */
-    type?: string;
   } & {
     id: string;
     updateAt?: Date;
@@ -5747,22 +3867,37 @@ export interface CreateTicketActionResponse {
     createBy?: string;
   } & {
     /**
-     * ticket 的标题
+     * 任务名称
      */
-    title: string;
+    name: string;
     /**
-     * 所属看板
+     * 对应工作流
      */
-    board: {
+    flow: {
       /**
-       * 看板描述
+       * 工作流描述
        */
       description?: string;
       /**
-       * 看板名称
+       * 工作流名称
        */
       name?: string;
-      fields?: {
+      /**
+       * 限制工作流允许操作的角色
+       */
+      roles?: string[];
+    } & {
+      id: string;
+      updateAt?: Date;
+      updateBy?: string;
+      createAt?: Date;
+      createBy?: string;
+    } & {
+      /**
+       * 工作流名称
+       */
+      name: string;
+      fields?: ({
         /**
          * 表单字段描述
          */
@@ -5774,7 +3909,7 @@ export interface CreateTicketActionResponse {
         /**
          * 是否是必须的字段
          */
-        isRequired?: boolean;
+        required?: boolean;
         /**
          * 表单字段key
          */
@@ -5791,7 +3926,191 @@ export interface CreateTicketActionResponse {
          * 表单字段的值
          */
         value?: string;
-      }[];
+      } & {
+        id: string;
+        updateAt?: Date;
+        updateBy?: string;
+        createAt?: Date;
+        createBy?: string;
+      })[];
+      /**
+       * 来源泳道
+       */
+      from: {
+        /**
+         * 泳道automations
+         */
+        automations?: string[];
+        /**
+         * 泳道描述
+         */
+        description?: string;
+        /**
+         * 泳道名称
+         */
+        name?: string;
+        refs?: {
+          /**
+           * 资源在第三方的 origin id
+           */
+          oid: string;
+          /**
+           * 来源
+           */
+          source: string;
+          /**
+           * 名称
+           */
+          name?: string;
+          /**
+           * 描述
+           */
+          description?: string;
+          /**
+           * 类型
+           */
+          type?: string;
+          /**
+           * 唯一地址
+           */
+          uri?: string;
+        }[];
+        /**
+         * 必须填写的字段
+         */
+        requires?: string[];
+        /**
+         * 限制将卡片拖动到该泳道的角色
+         */
+        roles?: string[];
+      } & {
+        id: string;
+        updateAt?: Date;
+        updateBy?: string;
+        createAt?: Date;
+        createBy?: string;
+      } & {
+        /**
+         * 泳道名称
+         */
+        name: string;
+      };
+      /**
+       * 目标泳道
+       */
+      to: {
+        /**
+         * 泳道automations
+         */
+        automations?: string[];
+        /**
+         * 泳道描述
+         */
+        description?: string;
+        /**
+         * 泳道名称
+         */
+        name?: string;
+        refs?: {
+          /**
+           * 资源在第三方的 origin id
+           */
+          oid: string;
+          /**
+           * 来源
+           */
+          source: string;
+          /**
+           * 名称
+           */
+          name?: string;
+          /**
+           * 描述
+           */
+          description?: string;
+          /**
+           * 类型
+           */
+          type?: string;
+          /**
+           * 唯一地址
+           */
+          uri?: string;
+        }[];
+        /**
+         * 必须填写的字段
+         */
+        requires?: string[];
+        /**
+         * 限制将卡片拖动到该泳道的角色
+         */
+        roles?: string[];
+      } & {
+        id: string;
+        updateAt?: Date;
+        updateBy?: string;
+        createAt?: Date;
+        createBy?: string;
+      } & {
+        /**
+         * 泳道名称
+         */
+        name: string;
+      };
+    };
+    /**
+     * 对应工单
+     */
+    ticket: {
+      /**
+       * 额外奖励
+       */
+      bonus?: number;
+      /**
+       * 赏金
+       */
+      bounty?: number;
+      /**
+       * 关闭时间
+       */
+      closeAt?: Date;
+      /**
+       * ticket 的内容
+       */
+      content?: string;
+      /**
+       * 第三方数据
+       */
+      data?: {
+        [k: string]: any;
+      };
+      /**
+       * 截止时间
+       */
+      deadline?: Date;
+      labels?: string[];
+      level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
+       * 父级卡片
+       */
+      parent?: string;
+      priority?: 0 | 1 | 2;
+      /**
+       * 发布时间
+       */
+      publishAt?: Date;
+      /**
+       * 发布人 (userId)
+       */
+      publishBy?: string | null;
+      /**
+       * 是否被发布
+       */
+      published?: boolean;
       refs?: {
         /**
          * 资源在第三方的 origin id
@@ -5818,6 +4137,38 @@ export interface CreateTicketActionResponse {
          */
         uri?: string;
       }[];
+      /**
+       * 备注
+       */
+      remark?: string;
+      /**
+       * 是否 reopened 过
+       */
+      reopen?: boolean;
+      reopenAt?: Date;
+      reopenBy?: string;
+      /**
+       * ticket risk
+       */
+      risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+      shiftAt?: Date;
+      state?: "OPEN" | "CLOSED";
+      /**
+       * 领取时间
+       */
+      takeAt?: Date;
+      /**
+       * 领取人 (userId)
+       */
+      takeBy?: string | null;
+      /**
+       * ticket 的标题
+       */
+      title?: string;
+      /**
+       * ticket 的类别
+       */
+      type?: string;
     } & {
       id: string;
       updateAt?: Date;
@@ -5826,9 +4177,12 @@ export interface CreateTicketActionResponse {
       createBy?: string;
     } & {
       /**
-       * 看板名称
+       * ticket 的标题
        */
-      name: string;
+      title: string;
+      /**
+       * 当前工单对应的可操作流程
+       */
       flows?: ({
         /**
          * 工作流描述
@@ -5865,7 +4219,7 @@ export interface CreateTicketActionResponse {
           /**
            * 是否是必须的字段
            */
-          isRequired?: boolean;
+          required?: boolean;
           /**
            * 表单字段key
            */
@@ -6014,7 +4368,10 @@ export interface CreateTicketActionResponse {
           name: string;
         };
       })[];
-      lanes?: ({
+      /**
+       * 所属泳道
+       */
+      lane?: {
         /**
          * 泳道automations
          */
@@ -6072,12 +4429,388 @@ export interface CreateTicketActionResponse {
          * 泳道名称
          */
         name: string;
-      })[];
+      };
+      /**
+       * 所属里程碑
+       */
+      milestone?: {
+        /**
+         * 实际里程碑开始激活的时间
+         */
+        activeAt?: Date;
+        /**
+         * 实际里程碑关闭时间
+         */
+        closeAt?: Date;
+        /**
+         * 里程碑描述
+         */
+        description?: string;
+        /**
+         * 计划结束时间
+         */
+        endAt?: Date;
+        /**
+         * 里程碑名称
+         */
+        name?: string;
+        refs?: {
+          /**
+           * 资源在第三方的 origin id
+           */
+          oid: string;
+          /**
+           * 来源
+           */
+          source: string;
+          /**
+           * 名称
+           */
+          name?: string;
+          /**
+           * 描述
+           */
+          description?: string;
+          /**
+           * 类型
+           */
+          type?: string;
+          /**
+           * 唯一地址
+           */
+          uri?: string;
+        }[];
+        /**
+         * 计划开始时间
+         */
+        startAt?: Date;
+        /**
+         * 状态
+         */
+        state?: "OPEN" | "CLOSED";
+      } & {
+        id: string;
+        updateAt?: Date;
+        updateBy?: string;
+        createAt?: Date;
+        createBy?: string;
+      } & {
+        /**
+         * 里程碑名称
+         */
+        name: string;
+        /**
+         * 关联的project
+         */
+        project: {
+          /**
+           * 项目实际开始激活的时间
+           */
+          activeAt?: Date;
+          /**
+           * 项目实际关闭时间
+           */
+          closeAt?: Date;
+          /**
+           * 项目描述
+           */
+          description?: string;
+          /**
+           * 计划结束时间
+           */
+          endAt?: Date;
+          /**
+           * 行业
+           */
+          industry?: string;
+          /**
+           * 标签
+           */
+          labels?: string[];
+          /**
+           * 项目logo
+           */
+          logo?: string;
+          /**
+           * 协作者
+           */
+          members?: string[];
+          /**
+           * 项目名称
+           */
+          name?: string;
+          /**
+           * 所属命名空间
+           */
+          ns?: string;
+          /**
+           * 项目负责人 (userId)
+           */
+          owner?: string;
+          /**
+           * 项目管理人员 userid
+           */
+          pm?: string[];
+          refs?: {
+            /**
+             * 资源在第三方的 origin id
+             */
+            oid: string;
+            /**
+             * 来源
+             */
+            source: string;
+            /**
+             * 名称
+             */
+            name?: string;
+            /**
+             * 描述
+             */
+            description?: string;
+            /**
+             * 类型
+             */
+            type?: string;
+            /**
+             * 唯一地址
+             */
+            uri?: string;
+          }[];
+          /**
+           * 项目阶段
+           */
+          stage?: string;
+          /**
+           * 计划开始时间
+           */
+          startAt?: Date;
+          /**
+           * 项目状态
+           */
+          state?: "OPEN" | "CLOSED";
+          /**
+           * 文档摘要，可以用于简介或者目录
+           */
+          summary?: string;
+        } & {
+          id: string;
+          updateAt?: Date;
+          updateBy?: string;
+          createAt?: Date;
+          createBy?: string;
+        } & {
+          /**
+           * 项目名称
+           */
+          name: string;
+          /**
+           * 项目负责人 (userId)
+           */
+          owner: string;
+          /**
+           * 项目状态
+           */
+          state: "OPEN" | "CLOSED";
+        };
+        /**
+         * 状态
+         */
+        state: "OPEN" | "CLOSED";
+      };
+      /**
+       * 所属项目
+       */
+      project: {
+        /**
+         * 项目实际开始激活的时间
+         */
+        activeAt?: Date;
+        /**
+         * 项目实际关闭时间
+         */
+        closeAt?: Date;
+        /**
+         * 项目描述
+         */
+        description?: string;
+        /**
+         * 计划结束时间
+         */
+        endAt?: Date;
+        /**
+         * 行业
+         */
+        industry?: string;
+        /**
+         * 标签
+         */
+        labels?: string[];
+        /**
+         * 项目logo
+         */
+        logo?: string;
+        /**
+         * 协作者
+         */
+        members?: string[];
+        /**
+         * 项目名称
+         */
+        name?: string;
+        /**
+         * 所属命名空间
+         */
+        ns?: string;
+        /**
+         * 项目负责人 (userId)
+         */
+        owner?: string;
+        /**
+         * 项目管理人员 userid
+         */
+        pm?: string[];
+        refs?: {
+          /**
+           * 资源在第三方的 origin id
+           */
+          oid: string;
+          /**
+           * 来源
+           */
+          source: string;
+          /**
+           * 名称
+           */
+          name?: string;
+          /**
+           * 描述
+           */
+          description?: string;
+          /**
+           * 类型
+           */
+          type?: string;
+          /**
+           * 唯一地址
+           */
+          uri?: string;
+        }[];
+        /**
+         * 项目阶段
+         */
+        stage?: string;
+        /**
+         * 计划开始时间
+         */
+        startAt?: Date;
+        /**
+         * 项目状态
+         */
+        state?: "OPEN" | "CLOSED";
+        /**
+         * 文档摘要，可以用于简介或者目录
+         */
+        summary?: string;
+      } & {
+        id: string;
+        updateAt?: Date;
+        updateBy?: string;
+        createAt?: Date;
+        createBy?: string;
+      } & {
+        /**
+         * 项目名称
+         */
+        name: string;
+        /**
+         * 项目负责人 (userId)
+         */
+        owner: string;
+        /**
+         * 项目状态
+         */
+        state: "OPEN" | "CLOSED";
+      };
+      state: "OPEN" | "CLOSED";
     };
+  })[];
+  headers: {
+    "x-total-count"?: number;
+  };
+}
+export interface CreateActionRequest {
+  /**
+   * 任务创建文档
+   */
+  body: {
     /**
-     * 当前工单对应的可操作流程
+     * 任务备注
      */
-    flows?: ({
+    remark?: string;
+    /**
+     * 任务名称
+     */
+    name?: string;
+    /**
+     * 上传的数据
+     */
+    payload?: {
+      [k: string]: any;
+    };
+  } & {
+    /**
+     * 任务名称
+     */
+    name: string;
+    /**
+     * 对应看板 ID
+     */
+    board: string;
+    /**
+     * 对应工作流 ID
+     */
+    flow: string;
+    /**
+     * 对应工单 ID
+     */
+    ticket: string;
+  };
+}
+export interface CreateActionResponse {
+  /**
+   * 任务载体
+   */
+  body: {
+    /**
+     * 任务备注
+     */
+    remark?: string;
+    /**
+     * 任务名称
+     */
+    name?: string;
+    /**
+     * 上传的数据
+     */
+    payload?: {
+      [k: string]: any;
+    };
+  } & {
+    id: string;
+    updateAt?: Date;
+    updateBy?: string;
+    createAt?: Date;
+    createBy?: string;
+  } & {
+    /**
+     * 任务名称
+     */
+    name: string;
+    /**
+     * 对应工作流
+     */
+    flow: {
       /**
        * 工作流描述
        */
@@ -6113,7 +4846,7 @@ export interface CreateTicketActionResponse {
         /**
          * 是否是必须的字段
          */
-        isRequired?: boolean;
+        required?: boolean;
         /**
          * 表单字段key
          */
@@ -6261,23 +4994,60 @@ export interface CreateTicketActionResponse {
          */
         name: string;
       };
-    })[];
+    };
     /**
-     * 所属泳道
+     * 对应工单
      */
-    lane?: {
+    ticket: {
       /**
-       * 泳道automations
+       * 额外奖励
        */
-      automations?: string[];
+      bonus?: number;
       /**
-       * 泳道描述
+       * 赏金
        */
-      description?: string;
+      bounty?: number;
       /**
-       * 泳道名称
+       * 关闭时间
        */
-      name?: string;
+      closeAt?: Date;
+      /**
+       * ticket 的内容
+       */
+      content?: string;
+      /**
+       * 第三方数据
+       */
+      data?: {
+        [k: string]: any;
+      };
+      /**
+       * 截止时间
+       */
+      deadline?: Date;
+      labels?: string[];
+      level?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+      /**
+       * 所属命名空间
+       */
+      ns?: string;
+      /**
+       * 父级卡片
+       */
+      parent?: string;
+      priority?: 0 | 1 | 2;
+      /**
+       * 发布时间
+       */
+      publishAt?: Date;
+      /**
+       * 发布人 (userId)
+       */
+      publishBy?: string | null;
+      /**
+       * 是否被发布
+       */
+      published?: boolean;
       refs?: {
         /**
          * 资源在第三方的 origin id
@@ -6305,13 +5075,37 @@ export interface CreateTicketActionResponse {
         uri?: string;
       }[];
       /**
-       * 必须填写的字段
+       * 备注
        */
-      requires?: string[];
+      remark?: string;
       /**
-       * 限制将卡片拖动到该泳道的角色
+       * 是否 reopened 过
        */
-      roles?: string[];
+      reopen?: boolean;
+      reopenAt?: Date;
+      reopenBy?: string;
+      /**
+       * ticket risk
+       */
+      risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
+      shiftAt?: Date;
+      state?: "OPEN" | "CLOSED";
+      /**
+       * 领取时间
+       */
+      takeAt?: Date;
+      /**
+       * 领取人 (userId)
+       */
+      takeBy?: string | null;
+      /**
+       * ticket 的标题
+       */
+      title?: string;
+      /**
+       * ticket 的类别
+       */
+      type?: string;
     } & {
       id: string;
       updateAt?: Date;
@@ -6320,120 +5114,213 @@ export interface CreateTicketActionResponse {
       createBy?: string;
     } & {
       /**
-       * 泳道名称
+       * ticket 的标题
        */
-      name: string;
-    };
-    /**
-     * 所属里程碑
-     */
-    milestone?: {
+      title: string;
       /**
-       * 计划开始时间
+       * 当前工单对应的可操作流程
        */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 实际里程碑开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 实际里程碑关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 里程碑描述
-       */
-      description?: string;
-      /**
-       * 里程碑名称
-       */
-      name?: string;
-      refs?: {
+      flows?: ({
         /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
+         * 工作流描述
          */
         description?: string;
         /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 状态
-       */
-      state?: "OPEN" | "CLOSED";
-      /**
-       * 关联的project
-       */
-      project?: {
-        /**
-         * 项目实际开始激活的时间
-         */
-        activeAt?: Date;
-        /**
-         * 项目实际关闭时间
-         */
-        closeAt?: Date;
-        /**
-         * 项目描述
-         */
-        description?: string;
-        /**
-         * 计划结束时间
-         */
-        endAt?: Date;
-        /**
-         * 行业
-         */
-        industry?: string;
-        /**
-         * 标签
-         */
-        labels?: string[];
-        /**
-         * 项目logo
-         */
-        logo?: string;
-        /**
-         * 协作者
-         */
-        members?: string[];
-        /**
-         * 项目名称
+         * 工作流名称
          */
         name?: string;
         /**
-         * 所属命名空间
+         * 限制工作流允许操作的角色
          */
-        ns?: string;
+        roles?: string[];
+      } & {
+        id: string;
+        updateAt?: Date;
+        updateBy?: string;
+        createAt?: Date;
+        createBy?: string;
+      } & {
         /**
-         * 项目负责人 (userId)
+         * 工作流名称
          */
-        owner?: string;
+        name: string;
+        fields?: ({
+          /**
+           * 表单字段描述
+           */
+          description?: string;
+          /**
+           * 是否是额外自定义的字段
+           */
+          isCustom?: boolean;
+          /**
+           * 是否是必须的字段
+           */
+          required?: boolean;
+          /**
+           * 表单字段key
+           */
+          key: string;
+          /**
+           * 表单字段名称
+           */
+          name: string;
+          /**
+           * 表单字段类型
+           */
+          type: string;
+          /**
+           * 表单字段的值
+           */
+          value?: string;
+        } & {
+          id: string;
+          updateAt?: Date;
+          updateBy?: string;
+          createAt?: Date;
+          createBy?: string;
+        })[];
         /**
-         * 项目管理人员 userid
+         * 来源泳道
          */
-        pm?: string[];
+        from: {
+          /**
+           * 泳道automations
+           */
+          automations?: string[];
+          /**
+           * 泳道描述
+           */
+          description?: string;
+          /**
+           * 泳道名称
+           */
+          name?: string;
+          refs?: {
+            /**
+             * 资源在第三方的 origin id
+             */
+            oid: string;
+            /**
+             * 来源
+             */
+            source: string;
+            /**
+             * 名称
+             */
+            name?: string;
+            /**
+             * 描述
+             */
+            description?: string;
+            /**
+             * 类型
+             */
+            type?: string;
+            /**
+             * 唯一地址
+             */
+            uri?: string;
+          }[];
+          /**
+           * 必须填写的字段
+           */
+          requires?: string[];
+          /**
+           * 限制将卡片拖动到该泳道的角色
+           */
+          roles?: string[];
+        } & {
+          id: string;
+          updateAt?: Date;
+          updateBy?: string;
+          createAt?: Date;
+          createBy?: string;
+        } & {
+          /**
+           * 泳道名称
+           */
+          name: string;
+        };
+        /**
+         * 目标泳道
+         */
+        to: {
+          /**
+           * 泳道automations
+           */
+          automations?: string[];
+          /**
+           * 泳道描述
+           */
+          description?: string;
+          /**
+           * 泳道名称
+           */
+          name?: string;
+          refs?: {
+            /**
+             * 资源在第三方的 origin id
+             */
+            oid: string;
+            /**
+             * 来源
+             */
+            source: string;
+            /**
+             * 名称
+             */
+            name?: string;
+            /**
+             * 描述
+             */
+            description?: string;
+            /**
+             * 类型
+             */
+            type?: string;
+            /**
+             * 唯一地址
+             */
+            uri?: string;
+          }[];
+          /**
+           * 必须填写的字段
+           */
+          requires?: string[];
+          /**
+           * 限制将卡片拖动到该泳道的角色
+           */
+          roles?: string[];
+        } & {
+          id: string;
+          updateAt?: Date;
+          updateBy?: string;
+          createAt?: Date;
+          createBy?: string;
+        } & {
+          /**
+           * 泳道名称
+           */
+          name: string;
+        };
+      })[];
+      /**
+       * 所属泳道
+       */
+      lane?: {
+        /**
+         * 泳道automations
+         */
+        automations?: string[];
+        /**
+         * 泳道描述
+         */
+        description?: string;
+        /**
+         * 泳道名称
+         */
+        name?: string;
         refs?: {
           /**
            * 资源在第三方的 origin id
@@ -6461,21 +5348,13 @@ export interface CreateTicketActionResponse {
           uri?: string;
         }[];
         /**
-         * 项目阶段
+         * 必须填写的字段
          */
-        stage?: string;
+        requires?: string[];
         /**
-         * 计划开始时间
+         * 限制将卡片拖动到该泳道的角色
          */
-        startAt?: Date;
-        /**
-         * 项目状态
-         */
-        state?: "OPEN" | "CLOSED";
-        /**
-         * 文档摘要，可以用于简介或者目录
-         */
-        summary?: string;
+        roles?: string[];
       } & {
         id: string;
         updateAt?: Date;
@@ -6484,31 +5363,200 @@ export interface CreateTicketActionResponse {
         createBy?: string;
       } & {
         /**
-         * 项目名称
+         * 泳道名称
+         */
+        name: string;
+      };
+      /**
+       * 所属里程碑
+       */
+      milestone?: {
+        /**
+         * 实际里程碑开始激活的时间
+         */
+        activeAt?: Date;
+        /**
+         * 实际里程碑关闭时间
+         */
+        closeAt?: Date;
+        /**
+         * 里程碑描述
+         */
+        description?: string;
+        /**
+         * 计划结束时间
+         */
+        endAt?: Date;
+        /**
+         * 里程碑名称
+         */
+        name?: string;
+        refs?: {
+          /**
+           * 资源在第三方的 origin id
+           */
+          oid: string;
+          /**
+           * 来源
+           */
+          source: string;
+          /**
+           * 名称
+           */
+          name?: string;
+          /**
+           * 描述
+           */
+          description?: string;
+          /**
+           * 类型
+           */
+          type?: string;
+          /**
+           * 唯一地址
+           */
+          uri?: string;
+        }[];
+        /**
+         * 计划开始时间
+         */
+        startAt?: Date;
+        /**
+         * 状态
+         */
+        state?: "OPEN" | "CLOSED";
+      } & {
+        id: string;
+        updateAt?: Date;
+        updateBy?: string;
+        createAt?: Date;
+        createBy?: string;
+      } & {
+        /**
+         * 里程碑名称
          */
         name: string;
         /**
-         * 项目负责人 (userId)
+         * 关联的project
          */
-        owner: string;
+        project: {
+          /**
+           * 项目实际开始激活的时间
+           */
+          activeAt?: Date;
+          /**
+           * 项目实际关闭时间
+           */
+          closeAt?: Date;
+          /**
+           * 项目描述
+           */
+          description?: string;
+          /**
+           * 计划结束时间
+           */
+          endAt?: Date;
+          /**
+           * 行业
+           */
+          industry?: string;
+          /**
+           * 标签
+           */
+          labels?: string[];
+          /**
+           * 项目logo
+           */
+          logo?: string;
+          /**
+           * 协作者
+           */
+          members?: string[];
+          /**
+           * 项目名称
+           */
+          name?: string;
+          /**
+           * 所属命名空间
+           */
+          ns?: string;
+          /**
+           * 项目负责人 (userId)
+           */
+          owner?: string;
+          /**
+           * 项目管理人员 userid
+           */
+          pm?: string[];
+          refs?: {
+            /**
+             * 资源在第三方的 origin id
+             */
+            oid: string;
+            /**
+             * 来源
+             */
+            source: string;
+            /**
+             * 名称
+             */
+            name?: string;
+            /**
+             * 描述
+             */
+            description?: string;
+            /**
+             * 类型
+             */
+            type?: string;
+            /**
+             * 唯一地址
+             */
+            uri?: string;
+          }[];
+          /**
+           * 项目阶段
+           */
+          stage?: string;
+          /**
+           * 计划开始时间
+           */
+          startAt?: Date;
+          /**
+           * 项目状态
+           */
+          state?: "OPEN" | "CLOSED";
+          /**
+           * 文档摘要，可以用于简介或者目录
+           */
+          summary?: string;
+        } & {
+          id: string;
+          updateAt?: Date;
+          updateBy?: string;
+          createAt?: Date;
+          createBy?: string;
+        } & {
+          /**
+           * 项目名称
+           */
+          name: string;
+          /**
+           * 项目负责人 (userId)
+           */
+          owner: string;
+          /**
+           * 项目状态
+           */
+          state: "OPEN" | "CLOSED";
+        };
         /**
-         * 项目状态
+         * 状态
          */
         state: "OPEN" | "CLOSED";
       };
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
       /**
-       * 里程碑名称
-       */
-      name: string;
-      /**
-       * 关联的project
+       * 所属项目
        */
       project: {
         /**
@@ -6621,126 +5669,8 @@ export interface CreateTicketActionResponse {
          */
         state: "OPEN" | "CLOSED";
       };
-      /**
-       * 状态
-       */
       state: "OPEN" | "CLOSED";
     };
-    /**
-     * 所属项目
-     */
-    project: {
-      /**
-       * 项目实际开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 项目实际关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 项目描述
-       */
-      description?: string;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 行业
-       */
-      industry?: string;
-      /**
-       * 标签
-       */
-      labels?: string[];
-      /**
-       * 项目logo
-       */
-      logo?: string;
-      /**
-       * 协作者
-       */
-      members?: string[];
-      /**
-       * 项目名称
-       */
-      name?: string;
-      /**
-       * 所属命名空间
-       */
-      ns?: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner?: string;
-      /**
-       * 项目管理人员 userid
-       */
-      pm?: string[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 项目阶段
-       */
-      stage?: string;
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 项目状态
-       */
-      state?: "OPEN" | "CLOSED";
-      /**
-       * 文档摘要，可以用于简介或者目录
-       */
-      summary?: string;
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 项目名称
-       */
-      name: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner: string;
-      /**
-       * 项目状态
-       */
-      state: "OPEN" | "CLOSED";
-    };
-    state: "OPEN" | "CLOSED";
   };
 }
 export interface ListMilestonesRequest {
@@ -6756,14 +5686,6 @@ export interface ListMilestonesRequest {
 export interface ListMilestonesResponse {
   body: ({
     /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
      * 实际里程碑开始激活的时间
      */
     activeAt?: Date;
@@ -6775,6 +5697,10 @@ export interface ListMilestonesResponse {
      * 里程碑描述
      */
     description?: string;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
     /**
      * 里程碑名称
      */
@@ -6806,123 +5732,13 @@ export interface ListMilestonesResponse {
       uri?: string;
     }[];
     /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
      * 状态
      */
     state?: "OPEN" | "CLOSED";
-    /**
-     * 关联的project
-     */
-    project?: {
-      /**
-       * 项目实际开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 项目实际关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 项目描述
-       */
-      description?: string;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 行业
-       */
-      industry?: string;
-      /**
-       * 标签
-       */
-      labels?: string[];
-      /**
-       * 项目logo
-       */
-      logo?: string;
-      /**
-       * 协作者
-       */
-      members?: string[];
-      /**
-       * 项目名称
-       */
-      name?: string;
-      /**
-       * 所属命名空间
-       */
-      ns?: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner?: string;
-      /**
-       * 项目管理人员 userid
-       */
-      pm?: string[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 项目阶段
-       */
-      stage?: string;
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 项目状态
-       */
-      state?: "OPEN" | "CLOSED";
-      /**
-       * 文档摘要，可以用于简介或者目录
-       */
-      summary?: string;
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 项目名称
-       */
-      name: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner: string;
-      /**
-       * 项目状态
-       */
-      state: "OPEN" | "CLOSED";
-    };
   } & {
     id: string;
     updateAt?: Date;
@@ -7060,14 +5876,6 @@ export interface ListMilestonesResponse {
 export interface CreateMilestoneRequest {
   body: {
     /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
      * 实际里程碑开始激活的时间
      */
     activeAt?: Date;
@@ -7079,6 +5887,10 @@ export interface CreateMilestoneRequest {
      * 里程碑描述
      */
     description?: string;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
     /**
      * 里程碑名称
      */
@@ -7109,6 +5921,10 @@ export interface CreateMilestoneRequest {
        */
       uri?: string;
     }[];
+    /**
+     * 计划开始时间
+     */
+    startAt?: Date;
     /**
      * 状态
      */
@@ -7130,14 +5946,6 @@ export interface CreateMilestoneResponse {
    */
   body: {
     /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
      * 实际里程碑开始激活的时间
      */
     activeAt?: Date;
@@ -7149,6 +5957,10 @@ export interface CreateMilestoneResponse {
      * 里程碑描述
      */
     description?: string;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
     /**
      * 里程碑名称
      */
@@ -7180,123 +5992,13 @@ export interface CreateMilestoneResponse {
       uri?: string;
     }[];
     /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
      * 状态
      */
     state?: "OPEN" | "CLOSED";
-    /**
-     * 关联的project
-     */
-    project?: {
-      /**
-       * 项目实际开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 项目实际关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 项目描述
-       */
-      description?: string;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 行业
-       */
-      industry?: string;
-      /**
-       * 标签
-       */
-      labels?: string[];
-      /**
-       * 项目logo
-       */
-      logo?: string;
-      /**
-       * 协作者
-       */
-      members?: string[];
-      /**
-       * 项目名称
-       */
-      name?: string;
-      /**
-       * 所属命名空间
-       */
-      ns?: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner?: string;
-      /**
-       * 项目管理人员 userid
-       */
-      pm?: string[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 项目阶段
-       */
-      stage?: string;
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 项目状态
-       */
-      state?: "OPEN" | "CLOSED";
-      /**
-       * 文档摘要，可以用于简介或者目录
-       */
-      summary?: string;
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 项目名称
-       */
-      name: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner: string;
-      /**
-       * 项目状态
-       */
-      state: "OPEN" | "CLOSED";
-    };
   } & {
     id: string;
     updateAt?: Date;
@@ -7437,14 +6139,6 @@ export interface GetMilestoneResponse {
    */
   body: {
     /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
      * 实际里程碑开始激活的时间
      */
     activeAt?: Date;
@@ -7456,6 +6150,10 @@ export interface GetMilestoneResponse {
      * 里程碑描述
      */
     description?: string;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
     /**
      * 里程碑名称
      */
@@ -7487,123 +6185,13 @@ export interface GetMilestoneResponse {
       uri?: string;
     }[];
     /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
      * 状态
      */
     state?: "OPEN" | "CLOSED";
-    /**
-     * 关联的project
-     */
-    project?: {
-      /**
-       * 项目实际开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 项目实际关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 项目描述
-       */
-      description?: string;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 行业
-       */
-      industry?: string;
-      /**
-       * 标签
-       */
-      labels?: string[];
-      /**
-       * 项目logo
-       */
-      logo?: string;
-      /**
-       * 协作者
-       */
-      members?: string[];
-      /**
-       * 项目名称
-       */
-      name?: string;
-      /**
-       * 所属命名空间
-       */
-      ns?: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner?: string;
-      /**
-       * 项目管理人员 userid
-       */
-      pm?: string[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 项目阶段
-       */
-      stage?: string;
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 项目状态
-       */
-      state?: "OPEN" | "CLOSED";
-      /**
-       * 文档摘要，可以用于简介或者目录
-       */
-      summary?: string;
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 项目名称
-       */
-      name: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner: string;
-      /**
-       * 项目状态
-       */
-      state: "OPEN" | "CLOSED";
-    };
   } & {
     id: string;
     updateAt?: Date;
@@ -7742,14 +6330,6 @@ export interface UpdateMilestoneRequest {
    */
   body: {
     /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
      * 实际里程碑开始激活的时间
      */
     activeAt?: Date;
@@ -7761,6 +6341,10 @@ export interface UpdateMilestoneRequest {
      * 里程碑描述
      */
     description?: string;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
     /**
      * 里程碑名称
      */
@@ -7791,6 +6375,10 @@ export interface UpdateMilestoneRequest {
        */
       uri?: string;
     }[];
+    /**
+     * 计划开始时间
+     */
+    startAt?: Date;
     /**
      * 状态
      */
@@ -7803,14 +6391,6 @@ export interface UpdateMilestoneResponse {
    */
   body: {
     /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
      * 实际里程碑开始激活的时间
      */
     activeAt?: Date;
@@ -7822,6 +6402,10 @@ export interface UpdateMilestoneResponse {
      * 里程碑描述
      */
     description?: string;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
     /**
      * 里程碑名称
      */
@@ -7853,123 +6437,13 @@ export interface UpdateMilestoneResponse {
       uri?: string;
     }[];
     /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
      * 状态
      */
     state?: "OPEN" | "CLOSED";
-    /**
-     * 关联的project
-     */
-    project?: {
-      /**
-       * 项目实际开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 项目实际关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 项目描述
-       */
-      description?: string;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 行业
-       */
-      industry?: string;
-      /**
-       * 标签
-       */
-      labels?: string[];
-      /**
-       * 项目logo
-       */
-      logo?: string;
-      /**
-       * 协作者
-       */
-      members?: string[];
-      /**
-       * 项目名称
-       */
-      name?: string;
-      /**
-       * 所属命名空间
-       */
-      ns?: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner?: string;
-      /**
-       * 项目管理人员 userid
-       */
-      pm?: string[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 项目阶段
-       */
-      stage?: string;
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 项目状态
-       */
-      state?: "OPEN" | "CLOSED";
-      /**
-       * 文档摘要，可以用于简介或者目录
-       */
-      summary?: string;
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 项目名称
-       */
-      name: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner: string;
-      /**
-       * 项目状态
-       */
-      state: "OPEN" | "CLOSED";
-    };
   } & {
     id: string;
     updateAt?: Date;
@@ -8132,7 +6606,7 @@ export interface GetBoardResponse {
       /**
        * 是否是必须的字段
        */
-      isRequired?: boolean;
+      required?: boolean;
       /**
        * 表单字段key
        */
@@ -8223,7 +6697,7 @@ export interface GetBoardResponse {
         /**
          * 是否是必须的字段
          */
-        isRequired?: boolean;
+        required?: boolean;
         /**
          * 表单字段key
          */
@@ -8899,14 +7373,6 @@ export type Project = {
  */
 export interface MilestoneDoc {
   /**
-   * 计划开始时间
-   */
-  startAt?: Date;
-  /**
-   * 计划结束时间
-   */
-  endAt?: Date;
-  /**
    * 实际里程碑开始激活的时间
    */
   activeAt?: Date;
@@ -8918,6 +7384,10 @@ export interface MilestoneDoc {
    * 里程碑描述
    */
   description?: string;
+  /**
+   * 计划结束时间
+   */
+  endAt?: Date;
   /**
    * 里程碑名称
    */
@@ -8949,135 +7419,17 @@ export interface MilestoneDoc {
     uri?: string;
   }[];
   /**
+   * 计划开始时间
+   */
+  startAt?: Date;
+  /**
    * 状态
    */
   state?: "OPEN" | "CLOSED";
-  /**
-   * 关联的project
-   */
-  project?: {
-    /**
-     * 项目实际开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 项目实际关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 项目描述
-     */
-    description?: string;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 行业
-     */
-    industry?: string;
-    /**
-     * 标签
-     */
-    labels?: string[];
-    /**
-     * 项目logo
-     */
-    logo?: string;
-    /**
-     * 协作者
-     */
-    members?: string[];
-    /**
-     * 项目名称
-     */
-    name?: string;
-    /**
-     * 所属命名空间
-     */
-    ns?: string;
-    /**
-     * 项目负责人 (userId)
-     */
-    owner?: string;
-    /**
-     * 项目管理人员 userid
-     */
-    pm?: string[];
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 项目阶段
-     */
-    stage?: string;
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 项目状态
-     */
-    state?: "OPEN" | "CLOSED";
-    /**
-     * 文档摘要，可以用于简介或者目录
-     */
-    summary?: string;
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  } & {
-    /**
-     * 项目名称
-     */
-    name: string;
-    /**
-     * 项目负责人 (userId)
-     */
-    owner: string;
-    /**
-     * 项目状态
-     */
-    state: "OPEN" | "CLOSED";
-  };
 }
 
 export type MilestoneCreateDoc = {
   /**
-   * 计划开始时间
-   */
-  startAt?: Date;
-  /**
-   * 计划结束时间
-   */
-  endAt?: Date;
-  /**
    * 实际里程碑开始激活的时间
    */
   activeAt?: Date;
@@ -9089,6 +7441,10 @@ export type MilestoneCreateDoc = {
    * 里程碑描述
    */
   description?: string;
+  /**
+   * 计划结束时间
+   */
+  endAt?: Date;
   /**
    * 里程碑名称
    */
@@ -9120,123 +7476,13 @@ export type MilestoneCreateDoc = {
     uri?: string;
   }[];
   /**
+   * 计划开始时间
+   */
+  startAt?: Date;
+  /**
    * 状态
    */
   state?: "OPEN" | "CLOSED";
-  /**
-   * 关联的project
-   */
-  project?: {
-    /**
-     * 项目实际开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 项目实际关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 项目描述
-     */
-    description?: string;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 行业
-     */
-    industry?: string;
-    /**
-     * 标签
-     */
-    labels?: string[];
-    /**
-     * 项目logo
-     */
-    logo?: string;
-    /**
-     * 协作者
-     */
-    members?: string[];
-    /**
-     * 项目名称
-     */
-    name?: string;
-    /**
-     * 所属命名空间
-     */
-    ns?: string;
-    /**
-     * 项目负责人 (userId)
-     */
-    owner?: string;
-    /**
-     * 项目管理人员 userid
-     */
-    pm?: string[];
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 项目阶段
-     */
-    stage?: string;
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 项目状态
-     */
-    state?: "OPEN" | "CLOSED";
-    /**
-     * 文档摘要，可以用于简介或者目录
-     */
-    summary?: string;
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  } & {
-    /**
-     * 项目名称
-     */
-    name: string;
-    /**
-     * 项目负责人 (userId)
-     */
-    owner: string;
-    /**
-     * 项目状态
-     */
-    state: "OPEN" | "CLOSED";
-  };
 } & {
   /**
    * 里程碑名称
@@ -9253,14 +7499,6 @@ export type MilestoneCreateDoc = {
  */
 export type Milestone = {
   /**
-   * 计划开始时间
-   */
-  startAt?: Date;
-  /**
-   * 计划结束时间
-   */
-  endAt?: Date;
-  /**
    * 实际里程碑开始激活的时间
    */
   activeAt?: Date;
@@ -9272,6 +7510,10 @@ export type Milestone = {
    * 里程碑描述
    */
   description?: string;
+  /**
+   * 计划结束时间
+   */
+  endAt?: Date;
   /**
    * 里程碑名称
    */
@@ -9303,123 +7545,13 @@ export type Milestone = {
     uri?: string;
   }[];
   /**
+   * 计划开始时间
+   */
+  startAt?: Date;
+  /**
    * 状态
    */
   state?: "OPEN" | "CLOSED";
-  /**
-   * 关联的project
-   */
-  project?: {
-    /**
-     * 项目实际开始激活的时间
-     */
-    activeAt?: Date;
-    /**
-     * 项目实际关闭时间
-     */
-    closeAt?: Date;
-    /**
-     * 项目描述
-     */
-    description?: string;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
-     * 行业
-     */
-    industry?: string;
-    /**
-     * 标签
-     */
-    labels?: string[];
-    /**
-     * 项目logo
-     */
-    logo?: string;
-    /**
-     * 协作者
-     */
-    members?: string[];
-    /**
-     * 项目名称
-     */
-    name?: string;
-    /**
-     * 所属命名空间
-     */
-    ns?: string;
-    /**
-     * 项目负责人 (userId)
-     */
-    owner?: string;
-    /**
-     * 项目管理人员 userid
-     */
-    pm?: string[];
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-    /**
-     * 项目阶段
-     */
-    stage?: string;
-    /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 项目状态
-     */
-    state?: "OPEN" | "CLOSED";
-    /**
-     * 文档摘要，可以用于简介或者目录
-     */
-    summary?: string;
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  } & {
-    /**
-     * 项目名称
-     */
-    name: string;
-    /**
-     * 项目负责人 (userId)
-     */
-    owner: string;
-    /**
-     * 项目状态
-     */
-    state: "OPEN" | "CLOSED";
-  };
 } & {
   id: string;
   updateAt?: Date;
@@ -9566,7 +7698,7 @@ export interface FieldDoc {
   /**
    * 是否是必须的字段
    */
-  isRequired?: boolean;
+  required?: boolean;
   /**
    * 表单字段key
    */
@@ -9597,7 +7729,7 @@ export type Field = {
   /**
    * 是否是必须的字段
    */
-  isRequired?: boolean;
+  required?: boolean;
   /**
    * 表单字段key
    */
@@ -9705,7 +7837,7 @@ export type Flow = {
     /**
      * 是否是必须的字段
      */
-    isRequired?: boolean;
+    required?: boolean;
     /**
      * 表单字段key
      */
@@ -10051,7 +8183,7 @@ export interface BoardDoc {
     /**
      * 是否是必须的字段
      */
-    isRequired?: boolean;
+    required?: boolean;
     /**
      * 表单字段key
      */
@@ -10121,7 +8253,7 @@ export type BoardCreateDoc = {
     /**
      * 是否是必须的字段
      */
-    isRequired?: boolean;
+    required?: boolean;
     /**
      * 表单字段key
      */
@@ -10277,7 +8409,7 @@ export type Board = {
     /**
      * 是否是必须的字段
      */
-    isRequired?: boolean;
+    required?: boolean;
     /**
      * 表单字段key
      */
@@ -10368,7 +8500,7 @@ export type Board = {
       /**
        * 是否是必须的字段
        */
-      isRequired?: boolean;
+      required?: boolean;
       /**
        * 表单字段key
        */
@@ -10583,31 +8715,19 @@ export type Board = {
  */
 export interface ActionDoc {
   /**
-   * 任务描述
+   * 任务备注
    */
-  description?: string;
+  remark?: string;
   /**
    * 任务名称
    */
   name?: string;
-  /**
-   * 对应看板 ID
-   */
-  board?: string;
-  /**
-   * 对应工作流 ID
-   */
-  flow?: string;
   /**
    * 上传的数据
    */
   payload?: {
     [k: string]: any;
   };
-  /**
-   * 对应工单 ID
-   */
-  ticket?: string;
 }
 
 /**
@@ -10615,31 +8735,19 @@ export interface ActionDoc {
  */
 export type ActionCreateDoc = {
   /**
-   * 任务描述
+   * 任务备注
    */
-  description?: string;
+  remark?: string;
   /**
    * 任务名称
    */
   name?: string;
-  /**
-   * 对应看板 ID
-   */
-  board?: string;
-  /**
-   * 对应工作流 ID
-   */
-  flow?: string;
   /**
    * 上传的数据
    */
   payload?: {
     [k: string]: any;
   };
-  /**
-   * 对应工单 ID
-   */
-  ticket?: string;
 } & {
   /**
    * 任务名称
@@ -10660,35 +8768,23 @@ export type ActionCreateDoc = {
 };
 
 /**
- * 泳道
+ * 任务载体
  */
 export type Action = {
   /**
-   * 任务描述
+   * 任务备注
    */
-  description?: string;
+  remark?: string;
   /**
    * 任务名称
    */
   name?: string;
-  /**
-   * 对应看板 ID
-   */
-  board?: string;
-  /**
-   * 对应工作流 ID
-   */
-  flow?: string;
   /**
    * 上传的数据
    */
   payload?: {
     [k: string]: any;
   };
-  /**
-   * 对应工单 ID
-   */
-  ticket?: string;
 } & {
   id: string;
   updateAt?: Date;
@@ -10700,330 +8796,6 @@ export type Action = {
    * 任务名称
    */
   name: string;
-  /**
-   * 对应看板
-   */
-  board: {
-    /**
-     * 看板描述
-     */
-    description?: string;
-    /**
-     * 看板名称
-     */
-    name?: string;
-    fields?: {
-      /**
-       * 表单字段描述
-       */
-      description?: string;
-      /**
-       * 是否是额外自定义的字段
-       */
-      isCustom?: boolean;
-      /**
-       * 是否是必须的字段
-       */
-      isRequired?: boolean;
-      /**
-       * 表单字段key
-       */
-      key: string;
-      /**
-       * 表单字段名称
-       */
-      name: string;
-      /**
-       * 表单字段类型
-       */
-      type: string;
-      /**
-       * 表单字段的值
-       */
-      value?: string;
-    }[];
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  } & {
-    /**
-     * 看板名称
-     */
-    name: string;
-    flows?: ({
-      /**
-       * 工作流描述
-       */
-      description?: string;
-      /**
-       * 工作流名称
-       */
-      name?: string;
-      /**
-       * 限制工作流允许操作的角色
-       */
-      roles?: string[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 工作流名称
-       */
-      name: string;
-      fields?: ({
-        /**
-         * 表单字段描述
-         */
-        description?: string;
-        /**
-         * 是否是额外自定义的字段
-         */
-        isCustom?: boolean;
-        /**
-         * 是否是必须的字段
-         */
-        isRequired?: boolean;
-        /**
-         * 表单字段key
-         */
-        key: string;
-        /**
-         * 表单字段名称
-         */
-        name: string;
-        /**
-         * 表单字段类型
-         */
-        type: string;
-        /**
-         * 表单字段的值
-         */
-        value?: string;
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      })[];
-      /**
-       * 来源泳道
-       */
-      from: {
-        /**
-         * 泳道automations
-         */
-        automations?: string[];
-        /**
-         * 泳道描述
-         */
-        description?: string;
-        /**
-         * 泳道名称
-         */
-        name?: string;
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 必须填写的字段
-         */
-        requires?: string[];
-        /**
-         * 限制将卡片拖动到该泳道的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 泳道名称
-         */
-        name: string;
-      };
-      /**
-       * 目标泳道
-       */
-      to: {
-        /**
-         * 泳道automations
-         */
-        automations?: string[];
-        /**
-         * 泳道描述
-         */
-        description?: string;
-        /**
-         * 泳道名称
-         */
-        name?: string;
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 必须填写的字段
-         */
-        requires?: string[];
-        /**
-         * 限制将卡片拖动到该泳道的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 泳道名称
-         */
-        name: string;
-      };
-    })[];
-    lanes?: ({
-      /**
-       * 泳道automations
-       */
-      automations?: string[];
-      /**
-       * 泳道描述
-       */
-      description?: string;
-      /**
-       * 泳道名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 必须填写的字段
-       */
-      requires?: string[];
-      /**
-       * 限制将卡片拖动到该泳道的角色
-       */
-      roles?: string[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 泳道名称
-       */
-      name: string;
-    })[];
-  };
   /**
    * 对应工作流
    */
@@ -11063,7 +8835,7 @@ export type Action = {
       /**
        * 是否是必须的字段
        */
-      isRequired?: boolean;
+      required?: boolean;
       /**
        * 表单字段key
        */
@@ -11335,330 +9107,6 @@ export type Action = {
      */
     title: string;
     /**
-     * 所属看板
-     */
-    board: {
-      /**
-       * 看板描述
-       */
-      description?: string;
-      /**
-       * 看板名称
-       */
-      name?: string;
-      fields?: {
-        /**
-         * 表单字段描述
-         */
-        description?: string;
-        /**
-         * 是否是额外自定义的字段
-         */
-        isCustom?: boolean;
-        /**
-         * 是否是必须的字段
-         */
-        isRequired?: boolean;
-        /**
-         * 表单字段key
-         */
-        key: string;
-        /**
-         * 表单字段名称
-         */
-        name: string;
-        /**
-         * 表单字段类型
-         */
-        type: string;
-        /**
-         * 表单字段的值
-         */
-        value?: string;
-      }[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 看板名称
-       */
-      name: string;
-      flows?: ({
-        /**
-         * 工作流描述
-         */
-        description?: string;
-        /**
-         * 工作流名称
-         */
-        name?: string;
-        /**
-         * 限制工作流允许操作的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 工作流名称
-         */
-        name: string;
-        fields?: ({
-          /**
-           * 表单字段描述
-           */
-          description?: string;
-          /**
-           * 是否是额外自定义的字段
-           */
-          isCustom?: boolean;
-          /**
-           * 是否是必须的字段
-           */
-          isRequired?: boolean;
-          /**
-           * 表单字段key
-           */
-          key: string;
-          /**
-           * 表单字段名称
-           */
-          name: string;
-          /**
-           * 表单字段类型
-           */
-          type: string;
-          /**
-           * 表单字段的值
-           */
-          value?: string;
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        })[];
-        /**
-         * 来源泳道
-         */
-        from: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-        /**
-         * 目标泳道
-         */
-        to: {
-          /**
-           * 泳道automations
-           */
-          automations?: string[];
-          /**
-           * 泳道描述
-           */
-          description?: string;
-          /**
-           * 泳道名称
-           */
-          name?: string;
-          refs?: {
-            /**
-             * 资源在第三方的 origin id
-             */
-            oid: string;
-            /**
-             * 来源
-             */
-            source: string;
-            /**
-             * 名称
-             */
-            name?: string;
-            /**
-             * 描述
-             */
-            description?: string;
-            /**
-             * 类型
-             */
-            type?: string;
-            /**
-             * 唯一地址
-             */
-            uri?: string;
-          }[];
-          /**
-           * 必须填写的字段
-           */
-          requires?: string[];
-          /**
-           * 限制将卡片拖动到该泳道的角色
-           */
-          roles?: string[];
-        } & {
-          id: string;
-          updateAt?: Date;
-          updateBy?: string;
-          createAt?: Date;
-          createBy?: string;
-        } & {
-          /**
-           * 泳道名称
-           */
-          name: string;
-        };
-      })[];
-      lanes?: ({
-        /**
-         * 泳道automations
-         */
-        automations?: string[];
-        /**
-         * 泳道描述
-         */
-        description?: string;
-        /**
-         * 泳道名称
-         */
-        name?: string;
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 必须填写的字段
-         */
-        requires?: string[];
-        /**
-         * 限制将卡片拖动到该泳道的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 泳道名称
-         */
-        name: string;
-      })[];
-    };
-    /**
      * 当前工单对应的可操作流程
      */
     flows?: ({
@@ -11697,7 +9145,7 @@ export type Action = {
         /**
          * 是否是必须的字段
          */
-        isRequired?: boolean;
+        required?: boolean;
         /**
          * 表单字段key
          */
@@ -11913,14 +9361,6 @@ export type Action = {
      */
     milestone?: {
       /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
        * 实际里程碑开始激活的时间
        */
       activeAt?: Date;
@@ -11932,6 +9372,10 @@ export type Action = {
        * 里程碑描述
        */
       description?: string;
+      /**
+       * 计划结束时间
+       */
+      endAt?: Date;
       /**
        * 里程碑名称
        */
@@ -11963,123 +9407,13 @@ export type Action = {
         uri?: string;
       }[];
       /**
+       * 计划开始时间
+       */
+      startAt?: Date;
+      /**
        * 状态
        */
       state?: "OPEN" | "CLOSED";
-      /**
-       * 关联的project
-       */
-      project?: {
-        /**
-         * 项目实际开始激活的时间
-         */
-        activeAt?: Date;
-        /**
-         * 项目实际关闭时间
-         */
-        closeAt?: Date;
-        /**
-         * 项目描述
-         */
-        description?: string;
-        /**
-         * 计划结束时间
-         */
-        endAt?: Date;
-        /**
-         * 行业
-         */
-        industry?: string;
-        /**
-         * 标签
-         */
-        labels?: string[];
-        /**
-         * 项目logo
-         */
-        logo?: string;
-        /**
-         * 协作者
-         */
-        members?: string[];
-        /**
-         * 项目名称
-         */
-        name?: string;
-        /**
-         * 所属命名空间
-         */
-        ns?: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner?: string;
-        /**
-         * 项目管理人员 userid
-         */
-        pm?: string[];
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 项目阶段
-         */
-        stage?: string;
-        /**
-         * 计划开始时间
-         */
-        startAt?: Date;
-        /**
-         * 项目状态
-         */
-        state?: "OPEN" | "CLOSED";
-        /**
-         * 文档摘要，可以用于简介或者目录
-         */
-        summary?: string;
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 项目名称
-         */
-        name: string;
-        /**
-         * 项目负责人 (userId)
-         */
-        owner: string;
-        /**
-         * 项目状态
-         */
-        state: "OPEN" | "CLOSED";
-      };
     } & {
       id: string;
       updateAt?: Date;
@@ -12878,330 +10212,6 @@ export type Ticket = {
    */
   title: string;
   /**
-   * 所属看板
-   */
-  board: {
-    /**
-     * 看板描述
-     */
-    description?: string;
-    /**
-     * 看板名称
-     */
-    name?: string;
-    fields?: {
-      /**
-       * 表单字段描述
-       */
-      description?: string;
-      /**
-       * 是否是额外自定义的字段
-       */
-      isCustom?: boolean;
-      /**
-       * 是否是必须的字段
-       */
-      isRequired?: boolean;
-      /**
-       * 表单字段key
-       */
-      key: string;
-      /**
-       * 表单字段名称
-       */
-      name: string;
-      /**
-       * 表单字段类型
-       */
-      type: string;
-      /**
-       * 表单字段的值
-       */
-      value?: string;
-    }[];
-    refs?: {
-      /**
-       * 资源在第三方的 origin id
-       */
-      oid: string;
-      /**
-       * 来源
-       */
-      source: string;
-      /**
-       * 名称
-       */
-      name?: string;
-      /**
-       * 描述
-       */
-      description?: string;
-      /**
-       * 类型
-       */
-      type?: string;
-      /**
-       * 唯一地址
-       */
-      uri?: string;
-    }[];
-  } & {
-    id: string;
-    updateAt?: Date;
-    updateBy?: string;
-    createAt?: Date;
-    createBy?: string;
-  } & {
-    /**
-     * 看板名称
-     */
-    name: string;
-    flows?: ({
-      /**
-       * 工作流描述
-       */
-      description?: string;
-      /**
-       * 工作流名称
-       */
-      name?: string;
-      /**
-       * 限制工作流允许操作的角色
-       */
-      roles?: string[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 工作流名称
-       */
-      name: string;
-      fields?: ({
-        /**
-         * 表单字段描述
-         */
-        description?: string;
-        /**
-         * 是否是额外自定义的字段
-         */
-        isCustom?: boolean;
-        /**
-         * 是否是必须的字段
-         */
-        isRequired?: boolean;
-        /**
-         * 表单字段key
-         */
-        key: string;
-        /**
-         * 表单字段名称
-         */
-        name: string;
-        /**
-         * 表单字段类型
-         */
-        type: string;
-        /**
-         * 表单字段的值
-         */
-        value?: string;
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      })[];
-      /**
-       * 来源泳道
-       */
-      from: {
-        /**
-         * 泳道automations
-         */
-        automations?: string[];
-        /**
-         * 泳道描述
-         */
-        description?: string;
-        /**
-         * 泳道名称
-         */
-        name?: string;
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 必须填写的字段
-         */
-        requires?: string[];
-        /**
-         * 限制将卡片拖动到该泳道的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 泳道名称
-         */
-        name: string;
-      };
-      /**
-       * 目标泳道
-       */
-      to: {
-        /**
-         * 泳道automations
-         */
-        automations?: string[];
-        /**
-         * 泳道描述
-         */
-        description?: string;
-        /**
-         * 泳道名称
-         */
-        name?: string;
-        refs?: {
-          /**
-           * 资源在第三方的 origin id
-           */
-          oid: string;
-          /**
-           * 来源
-           */
-          source: string;
-          /**
-           * 名称
-           */
-          name?: string;
-          /**
-           * 描述
-           */
-          description?: string;
-          /**
-           * 类型
-           */
-          type?: string;
-          /**
-           * 唯一地址
-           */
-          uri?: string;
-        }[];
-        /**
-         * 必须填写的字段
-         */
-        requires?: string[];
-        /**
-         * 限制将卡片拖动到该泳道的角色
-         */
-        roles?: string[];
-      } & {
-        id: string;
-        updateAt?: Date;
-        updateBy?: string;
-        createAt?: Date;
-        createBy?: string;
-      } & {
-        /**
-         * 泳道名称
-         */
-        name: string;
-      };
-    })[];
-    lanes?: ({
-      /**
-       * 泳道automations
-       */
-      automations?: string[];
-      /**
-       * 泳道描述
-       */
-      description?: string;
-      /**
-       * 泳道名称
-       */
-      name?: string;
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 必须填写的字段
-       */
-      requires?: string[];
-      /**
-       * 限制将卡片拖动到该泳道的角色
-       */
-      roles?: string[];
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 泳道名称
-       */
-      name: string;
-    })[];
-  };
-  /**
    * 当前工单对应的可操作流程
    */
   flows?: ({
@@ -13240,7 +10250,7 @@ export type Ticket = {
       /**
        * 是否是必须的字段
        */
-      isRequired?: boolean;
+      required?: boolean;
       /**
        * 表单字段key
        */
@@ -13456,14 +10466,6 @@ export type Ticket = {
    */
   milestone?: {
     /**
-     * 计划开始时间
-     */
-    startAt?: Date;
-    /**
-     * 计划结束时间
-     */
-    endAt?: Date;
-    /**
      * 实际里程碑开始激活的时间
      */
     activeAt?: Date;
@@ -13475,6 +10477,10 @@ export type Ticket = {
      * 里程碑描述
      */
     description?: string;
+    /**
+     * 计划结束时间
+     */
+    endAt?: Date;
     /**
      * 里程碑名称
      */
@@ -13506,123 +10512,13 @@ export type Ticket = {
       uri?: string;
     }[];
     /**
+     * 计划开始时间
+     */
+    startAt?: Date;
+    /**
      * 状态
      */
     state?: "OPEN" | "CLOSED";
-    /**
-     * 关联的project
-     */
-    project?: {
-      /**
-       * 项目实际开始激活的时间
-       */
-      activeAt?: Date;
-      /**
-       * 项目实际关闭时间
-       */
-      closeAt?: Date;
-      /**
-       * 项目描述
-       */
-      description?: string;
-      /**
-       * 计划结束时间
-       */
-      endAt?: Date;
-      /**
-       * 行业
-       */
-      industry?: string;
-      /**
-       * 标签
-       */
-      labels?: string[];
-      /**
-       * 项目logo
-       */
-      logo?: string;
-      /**
-       * 协作者
-       */
-      members?: string[];
-      /**
-       * 项目名称
-       */
-      name?: string;
-      /**
-       * 所属命名空间
-       */
-      ns?: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner?: string;
-      /**
-       * 项目管理人员 userid
-       */
-      pm?: string[];
-      refs?: {
-        /**
-         * 资源在第三方的 origin id
-         */
-        oid: string;
-        /**
-         * 来源
-         */
-        source: string;
-        /**
-         * 名称
-         */
-        name?: string;
-        /**
-         * 描述
-         */
-        description?: string;
-        /**
-         * 类型
-         */
-        type?: string;
-        /**
-         * 唯一地址
-         */
-        uri?: string;
-      }[];
-      /**
-       * 项目阶段
-       */
-      stage?: string;
-      /**
-       * 计划开始时间
-       */
-      startAt?: Date;
-      /**
-       * 项目状态
-       */
-      state?: "OPEN" | "CLOSED";
-      /**
-       * 文档摘要，可以用于简介或者目录
-       */
-      summary?: string;
-    } & {
-      id: string;
-      updateAt?: Date;
-      updateBy?: string;
-      createAt?: Date;
-      createBy?: string;
-    } & {
-      /**
-       * 项目名称
-       */
-      name: string;
-      /**
-       * 项目负责人 (userId)
-       */
-      owner: string;
-      /**
-       * 项目状态
-       */
-      state: "OPEN" | "CLOSED";
-    };
   } & {
     id: string;
     updateAt?: Date;

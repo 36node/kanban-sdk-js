@@ -244,21 +244,38 @@ export default class SDK {
         headers: { Authorization: this.auth },
       });
     },
+  };
+  /**
+   * action's methods
+   */
+  action = {
+    /**
+     * List all actions
+     *
+     * @param {ListActionsRequest} req listActions request
+     * @returns {Promise<ListActionsResponse>} A paged array of actions
+     */
+    listActions: req => {
+      const { query } = req || {};
+
+      return fetch(`${this.base}/actions`, {
+        method: "GET",
+        query,
+        headers: { Authorization: this.auth },
+      });
+    },
     /**
      * create an action to drive ticket in the flows
      *
-     * @param {CreateTicketActionRequest} req createTicketAction request
-     * @returns {Promise<CreateTicketActionResponse>} The updated ticket
+     * @param {CreateActionRequest} req createAction request
+     * @returns {Promise<CreateActionResponse>} The updated ticket
      */
-    createTicketAction: req => {
-      const { ticketId, body } = req || {};
+    createAction: req => {
+      const { body } = req || {};
 
-      if (!ticketId)
-        throw new Error("ticketId is required for createTicketAction");
-      if (!body)
-        throw new Error("requetBody is required for createTicketAction");
+      if (!body) throw new Error("requetBody is required for createAction");
 
-      return fetch(`${this.base}/tickets/${ticketId}/actions`, {
+      return fetch(`${this.base}/actions`, {
         method: "POST",
         body,
         headers: { Authorization: this.auth },
