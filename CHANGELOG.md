@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/adventurer-tech/kanban-sdk-js/compare/v0.1.2...v0.1.3) (2021-06-24)
+
+
+### Bug Fixes
+
+* a little update ([995d099](https://github.com/adventurer-tech/kanban-sdk-js/commit/995d09911674502e0a025f1a1fa666fa1acfa9bb))
+
 ### [0.1.2](https://github.com/adventurer-tech/kanban-sdk-js/compare/v0.1.1...v0.1.2) (2021-06-24)
 
 
