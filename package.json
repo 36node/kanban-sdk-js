@@ -1,9 +1,9 @@
 {
-  "name": "@36node/kanban-sdk",
+  "name": "@adventurer-tech/kanban-sdk",
   "version": "0.1.0",
   "description": "A SDK boilerplate.",
   "repository": {
-    "url": "36node/kanban-sdk-js",
+    "url": "adventurer-tech/kanban-sdk-js",
     "type": "git"
   },
   "license": "MIT",
