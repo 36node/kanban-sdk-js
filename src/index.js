@@ -244,6 +244,70 @@ export default class SDK {
         headers: { Authorization: this.auth },
       });
     },
+    /**
+     * take ticket
+     *
+     * @param {TakeTicketRequest} req takeTicket request
+     * @returns {Promise<TakeTicketResponse>} The updated ticket
+     */
+    takeTicket: req => {
+      const { ticketId } = req || {};
+
+      if (!ticketId) throw new Error("ticketId is required for takeTicket");
+
+      return fetch(`${this.base}/tickets/${ticketId}/!take`, {
+        method: "POST",
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * untake ticket
+     *
+     * @param {UntakeTicketRequest} req untakeTicket request
+     * @returns {Promise<UntakeTicketResponse>} The updated ticket
+     */
+    untakeTicket: req => {
+      const { ticketId } = req || {};
+
+      if (!ticketId) throw new Error("ticketId is required for untakeTicket");
+
+      return fetch(`${this.base}/tickets/${ticketId}/!untake`, {
+        method: "POST",
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * close ticket
+     *
+     * @param {CloseTicketRequest} req closeTicket request
+     * @returns {Promise<CloseTicketResponse>} The updated ticket
+     */
+    closeTicket: req => {
+      const { ticketId } = req || {};
+
+      if (!ticketId) throw new Error("ticketId is required for closeTicket");
+
+      return fetch(`${this.base}/tickets/${ticketId}/!close`, {
+        method: "POST",
+        headers: { Authorization: this.auth },
+      });
+    },
+    /**
+     * reopen ticket
+     *
+     * @param {ReopenTicketRequest} req reopenTicket request
+     * @returns {Promise<ReopenTicketResponse>} The updated ticket
+     */
+    reopenTicket: req => {
+      const { ticketId } = req || {};
+
+      if (!ticketId) throw new Error("ticketId is required for reopenTicket");
+
+      return fetch(`${this.base}/tickets/${ticketId}/!reopen`, {
+        method: "POST",
+        headers: { Authorization: this.auth },
+      });
+    },
   };
   /**
    * action's methods
@@ -388,7 +452,7 @@ export default class SDK {
 
       if (!boardId) throw new Error("boardId is required for getBoard");
 
-      return fetch(`${this.base}/board/${boardId}`, {
+      return fetch(`${this.base}/boards/${boardId}`, {
         method: "GET",
         headers: { Authorization: this.auth },
       });
