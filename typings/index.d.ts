@@ -853,6 +853,7 @@ export interface ListTicketsRequest {
     takeBy?: string[];
     type?: string[];
     title_like?: string;
+    stage?: string;
   };
 }
 export interface ListTicketsResponse {
