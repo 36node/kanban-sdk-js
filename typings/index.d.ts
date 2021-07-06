@@ -223,7 +223,7 @@ export interface ListProjectsResponse {
     /**
      * 项目阶段
      */
-    stage?: string;
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     /**
      * 计划开始时间
      */
@@ -334,7 +334,7 @@ export interface CreateProjectRequest {
     /**
      * 项目阶段
      */
-    stage?: string;
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     /**
      * 计划开始时间
      */
@@ -440,7 +440,7 @@ export interface CreateProjectResponse {
     /**
      * 项目阶段
      */
-    stage?: string;
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     /**
      * 计划开始时间
      */
@@ -559,7 +559,7 @@ export interface GetProjectResponse {
     /**
      * 项目阶段
      */
-    stage?: string;
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     /**
      * 计划开始时间
      */
@@ -668,7 +668,7 @@ export interface UpdateProjectRequest {
     /**
      * 项目阶段
      */
-    stage?: string;
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     /**
      * 计划开始时间
      */
@@ -765,7 +765,7 @@ export interface UpdateProjectResponse {
     /**
      * 项目阶段
      */
-    stage?: string;
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     /**
      * 计划开始时间
      */
@@ -946,6 +946,10 @@ export interface ListTicketsResponse {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -1374,7 +1378,7 @@ export interface ListTicketsResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -1493,7 +1497,7 @@ export interface ListTicketsResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -1623,6 +1627,10 @@ export interface CreateTicketRequest {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -1761,6 +1769,10 @@ export interface CreateTicketResponse {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -2189,7 +2201,7 @@ export interface CreateTicketResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -2308,7 +2320,7 @@ export interface CreateTicketResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -2441,6 +2453,10 @@ export interface GetTicketResponse {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -2869,7 +2885,7 @@ export interface GetTicketResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -2988,7 +3004,7 @@ export interface GetTicketResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -3116,6 +3132,10 @@ export interface UpdateTicketRequest {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -3254,6 +3274,10 @@ export interface UpdateTicketResponse {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -3682,7 +3706,7 @@ export interface UpdateTicketResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -3801,7 +3825,7 @@ export interface UpdateTicketResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -3938,6 +3962,10 @@ export interface TakeTicketResponse {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -4366,7 +4394,7 @@ export interface TakeTicketResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -4485,7 +4513,7 @@ export interface TakeTicketResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -4618,6 +4646,10 @@ export interface UntakeTicketResponse {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -5046,7 +5078,7 @@ export interface UntakeTicketResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -5165,7 +5197,7 @@ export interface UntakeTicketResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -5298,6 +5330,10 @@ export interface CloseTicketResponse {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -5726,7 +5762,7 @@ export interface CloseTicketResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -5845,7 +5881,7 @@ export interface CloseTicketResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -5978,6 +6014,10 @@ export interface ReopenTicketResponse {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -6406,7 +6446,7 @@ export interface ReopenTicketResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -6525,7 +6565,7 @@ export interface ReopenTicketResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -6881,6 +6921,10 @@ export interface ListActionsResponse {
        */
       risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
       shiftAt?: Date;
+      /**
+       * project 阶段
+       */
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       state?: "OPEN" | "CLOSED";
       /**
        * 领取时间
@@ -7309,7 +7353,7 @@ export interface ListActionsResponse {
           /**
            * 项目阶段
            */
-          stage?: string;
+          stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
           /**
            * 计划开始时间
            */
@@ -7428,7 +7472,7 @@ export interface ListActionsResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -7817,6 +7861,10 @@ export interface CreateActionResponse {
        */
       risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
       shiftAt?: Date;
+      /**
+       * project 阶段
+       */
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       state?: "OPEN" | "CLOSED";
       /**
        * 领取时间
@@ -8245,7 +8293,7 @@ export interface CreateActionResponse {
           /**
            * 项目阶段
            */
-          stage?: string;
+          stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
           /**
            * 计划开始时间
            */
@@ -8364,7 +8412,7 @@ export interface CreateActionResponse {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -8407,8 +8455,10 @@ export interface ListMilestonesRequest {
     _offset?: number;
     _sort?: string;
     _select?: string[];
-    project: string;
+    project?: string[];
     state?: "OPEN" | "CLOSED";
+    startAt_gt?: string;
+    startAt_lt?: string;
   };
 }
 export interface ListMilestonesResponse {
@@ -8559,7 +8609,7 @@ export interface ListMilestonesResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -8819,7 +8869,7 @@ export interface CreateMilestoneResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -9012,7 +9062,7 @@ export interface GetMilestoneResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -9264,7 +9314,7 @@ export interface UpdateMilestoneResponse {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -9754,7 +9804,7 @@ export type TicketType = string;
 /**
  * project 阶段
  */
-export type ProjectStage = string;
+export type ProjectStage = "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
 
 /**
  * 第三方资源关联
@@ -9867,7 +9917,7 @@ export interface ProjectDoc {
   /**
    * 项目阶段
    */
-  stage?: string;
+  stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
   /**
    * 计划开始时间
    */
@@ -9963,7 +10013,7 @@ export type ProjectCreateDoc = {
   /**
    * 项目阶段
    */
-  stage?: string;
+  stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
   /**
    * 计划开始时间
    */
@@ -10068,7 +10118,7 @@ export type Project = {
   /**
    * 项目阶段
    */
-  stage?: string;
+  stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
   /**
    * 计划开始时间
    */
@@ -10378,7 +10428,7 @@ export type Milestone = {
     /**
      * 项目阶段
      */
-    stage?: string;
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     /**
      * 计划开始时间
      */
@@ -11787,6 +11837,10 @@ export type Action = {
      */
     risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
     shiftAt?: Date;
+    /**
+     * project 阶段
+     */
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     state?: "OPEN" | "CLOSED";
     /**
      * 领取时间
@@ -12215,7 +12269,7 @@ export type Action = {
         /**
          * 项目阶段
          */
-        stage?: string;
+        stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
         /**
          * 计划开始时间
          */
@@ -12334,7 +12388,7 @@ export type Action = {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -12508,6 +12562,10 @@ export interface TicketDoc {
    */
   risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   shiftAt?: Date;
+  /**
+   * project 阶段
+   */
+  stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
   state?: "OPEN" | "CLOSED";
   /**
    * 领取时间
@@ -12617,6 +12675,10 @@ export type TicketCreateDoc = {
    */
   risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   shiftAt?: Date;
+  /**
+   * project 阶段
+   */
+  stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
   state?: "OPEN" | "CLOSED";
   /**
    * 领取时间
@@ -12751,6 +12813,10 @@ export type TicketUpdateDoc = {
    */
   risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   shiftAt?: Date;
+  /**
+   * project 阶段
+   */
+  stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
   state?: "OPEN" | "CLOSED";
   /**
    * 领取时间
@@ -12888,6 +12954,10 @@ export type Ticket = {
    */
   risk?: "NO_RISK" | "RISK_DELAY" | "RISK_URGENCY" | "RISK_RETENTION";
   shiftAt?: Date;
+  /**
+   * project 阶段
+   */
+  stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
   state?: "OPEN" | "CLOSED";
   /**
    * 领取时间
@@ -13316,7 +13386,7 @@ export type Ticket = {
       /**
        * 项目阶段
        */
-      stage?: string;
+      stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
       /**
        * 计划开始时间
        */
@@ -13435,7 +13505,7 @@ export type Ticket = {
     /**
      * 项目阶段
      */
-    stage?: string;
+    stage?: "INIT" | "DEVELOPMENT" | "DELIVERY" | "MAINTAIN";
     /**
      * 计划开始时间
      */

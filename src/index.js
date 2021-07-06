@@ -359,8 +359,6 @@ export default class SDK {
     listMilestones: req => {
       const { query } = req || {};
 
-      if (!query) throw new Error("query is required for milestone");
-
       return fetch(`${this.base}/milestones`, {
         method: "GET",
         query,
